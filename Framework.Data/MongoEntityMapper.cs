@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace Core
+namespace Framework.Data
 {
     public class MongoEntityMapper
     {
@@ -16,13 +16,13 @@ namespace Core
                 return;
             }
 
-            var props = typeof(T).GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance); 
+            var props = typeof(T).GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
 
             BsonClassMap.RegisterClassMap<T>(cm =>
             {
                 foreach (var prop in props)
                 {
-                    var ignored = prop.GetCustomAttributes(typeof(IgnoreField), true).Cast<IgnoreField>().FirstOrDefault();
+                    var ignored = prop.GetCustomAttributes(typeof(IgnoreFieldAttribute), true).Cast<IgnoreFieldAttribute>().FirstOrDefault();
                     if (ignored != null)
                         continue;
 

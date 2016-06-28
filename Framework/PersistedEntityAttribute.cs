@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core
+namespace Framework
 {
     public class PersistedEntityAttribute : Attribute
     {
-        readonly string _entityName;
+        public string EntityName { get; private set; }
 
         public PersistedEntityAttribute(string entityName)
         {
-            _entityName = entityName;
+            EntityName = entityName;
         }
 
         public PersistedEntityAttribute()

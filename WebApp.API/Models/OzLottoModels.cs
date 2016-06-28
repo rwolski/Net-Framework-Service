@@ -1,16 +1,15 @@
-﻿using Core;
-using Newtonsoft.Json;
+﻿using Framework;
+using Framework.Queue;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace WebApp.API.Models
 {
     /// <summary>
     /// Oz lotto draw model
     /// </summary>
-    [PersistedEntity("OzLotto")]
+    [PersistedEntity("OzLottoDrawMongo")]
+    [QueuedEntity("OzLottoDrawQueue")]
     public class OzLottoDrawModel : Entity
     {
         /// <summary>

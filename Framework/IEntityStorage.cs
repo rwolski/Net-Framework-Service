@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core
+namespace Framework
 {
     public interface IEntityStorage<T>
     {
@@ -12,8 +12,12 @@ namespace Core
 
         void Delete(T entity);
 
-        void Delete(long id);
+        void Delete(object id);
 
-        T GetByIdentity(long id);
+        T FindByIdentity(object id);
+
+        IEnumerable<T> Find(System.Linq.Expressions.Expression<Func<T, bool>> expression);
+
+        IEnumerable<T> FindAll();
     }
 }

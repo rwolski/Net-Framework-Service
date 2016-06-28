@@ -3,7 +3,7 @@ using RabbitMQ.Client.Events;
 using System;
 using System.Text;
 
-namespace Core
+namespace Framework.Queue
 {
     internal class RabbitMQQueue : IQueue
     {

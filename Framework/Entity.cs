@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core
+namespace Framework
 {
     /// <summary>
     /// Base entity class
@@ -26,7 +26,7 @@ namespace Core
         /// <param name="id">The identifier.</param>
         public Entity(long id)
         {
-            EntityId = id;
+            Id = id;
         }
 
         /// <summary>
@@ -35,8 +35,8 @@ namespace Core
         /// <value>
         /// The entity identifier.
         /// </value>
-        [IdField("Id")]
-        public long? EntityId { get; set; }
+        [IdField("_id")]
+        public object Id { get; set; }
 
         /// <summary>
         /// Gets the name of the entity.

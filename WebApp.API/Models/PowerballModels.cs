@@ -1,16 +1,18 @@
-﻿using Core;
+﻿using Framework.Cache;
+using Framework.Queue;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Runtime.Serialization;
 
 namespace WebApp.API.Models
 {
     /// <summary>
     /// Powerball draw model
     /// </summary>
-    [CachedEntity("Powerball")]
+    [CachedEntity("PowerballDrawCache")]
+    [QueuedEntity("PowerballDrawQueue")]
     public class PowerballDrawModel
     {
         /// <summary>
@@ -41,16 +43,19 @@ namespace WebApp.API.Models
     /// <summary>
     /// Draw status codes
     /// </summary>
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum DrawStatusCode
     {
         /// <summary>
         /// Draw is closed
         /// </summary>
+        [EnumMember(Value = "closed")]
         Closed = 0,
 
         /// <summary>
         /// Draw is open
         /// </summary>
+        [EnumMember(Value = "open")]
         Open = 1
     }
 }

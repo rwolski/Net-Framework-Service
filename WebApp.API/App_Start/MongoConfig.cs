@@ -1,9 +1,5 @@
-﻿using Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Web;
+﻿using Framework;
+using Framework.Data;
 using WebApp.API.Models;
 
 namespace WebApp.API
@@ -14,7 +10,7 @@ namespace WebApp.API
         {
             MongoEntityMapper.Map<Entity>();
             MongoEntityMapper.Map<OzLottoDrawModel>();
-            
+
         }
     }
 }

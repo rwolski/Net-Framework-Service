@@ -23,18 +23,18 @@ namespace WebApp.API
             ContainerConfig.RegisterModules();
         }
 
-        protected void Application_Error(Object sender, EventArgs e)
-        {
-            if (!System.Diagnostics.EventLog.SourceExists
-            ("ASPNETApplication"))
-            {
-                System.Diagnostics.EventLog.CreateEventSource
-                   ("ASPNETApplication", "Application");
-            }
-            System.Diagnostics.EventLog.WriteEntry
-                ("ASPNETApplication",
-                Server.GetLastError().Message);
-        }
+        //protected void Application_Error(Object sender, EventArgs e)
+        //{
+        //    if (!System.Diagnostics.EventLog.SourceExists
+        //    ("ASPNETApplication"))
+        //    {
+        //        System.Diagnostics.EventLog.CreateEventSource
+        //           ("ASPNETApplication", "Application");
+        //    }
+        //    System.Diagnostics.EventLog.WriteEntry
+        //        ("ASPNETApplication",
+        //        Server.GetLastError().Message);
+        //}
 
         protected void Application_BeginRequest()
         {

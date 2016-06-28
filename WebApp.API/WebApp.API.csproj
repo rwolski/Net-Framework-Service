@@ -316,17 +316,21 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj">
-      <Project>{123a617f-f812-4406-872e-92e5b816bae7}</Project>
-      <Name>Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Framework.Cache\Framework.Cache.csproj">
       <Project>{75c65245-0265-49bf-9ce4-caa379b6bae7}</Project>
       <Name>Framework.Cache</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Framework.Data\Framework.Data.csproj">
+      <Project>{91caefa1-3ea3-41c3-a2b1-ffaa61b28206}</Project>
+      <Name>Framework.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Framework.Queue\Framework.Queue.csproj">
       <Project>{1a28e5ff-1e38-4f99-ba24-85b43a62db36}</Project>
       <Name>Framework.Queue</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Framework\Framework.csproj">
+      <Project>{123a617f-f812-4406-872e-92e5b816bae7}</Project>
+      <Name>Framework</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

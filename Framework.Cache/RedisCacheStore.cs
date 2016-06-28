@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Core
+namespace Framework.Cache
 {
     internal sealed class RedisCacheStore : ICacheStore
     {
@@ -51,6 +51,9 @@ namespace Core
         public T GetObject<T>()
         {
             var cacheAttribute = typeof(T).GetCustomAttributes(typeof(CachedEntityAttribute), false).Cast<CachedEntityAttribute>().FirstOrDefault();
+            if (cacheAttribute == null || string.IsNullOrWhiteSpace(cacheAttribute.CacheName))
+                return GetObject<T>(typeof(T).Name);
+
             return GetObject<T>(cacheAttribute.CacheName);
         }
 

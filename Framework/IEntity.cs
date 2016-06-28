@@ -1,8 +1,8 @@
-﻿namespace Core
+﻿namespace Framework
 {
     public interface IEntity
     {
-        long? EntityId { get; }
+        object Id { get; }
 
         string EntityName { get; }
     }

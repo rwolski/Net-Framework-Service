@@ -1,9 +1,5 @@
-﻿using Core;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Web;
+﻿using Framework.Cache;
+using Framework.Queue;
 using System.Web.Http;
 using WebApp.API.Models;
 
@@ -36,9 +32,8 @@ namespace WebApp.API.Controllers
         public PowerballDrawModel Get()
         {
             var redisProvider = Configuration.DependencyResolver.GetService(typeof(ICacheProvider)) as RedisProvider;
-            
-            var store = redisProvider.GetStore(0);
 
+            var store = redisProvider.GetStore(0);
             var drawModel = store.GetObject<PowerballDrawModel>();
 
             if (drawModel != null)
@@ -47,7 +42,7 @@ namespace WebApp.API.Controllers
             }
 
             var queueProvider = Configuration.DependencyResolver.GetService(typeof(IQueueProvider)) as RabbitMQProvider;
-            using (var q = queueProvider.GetQueue("Powerball"))
+            using (var q = queueProvider.GetQueue<PowerballDrawModel>())
             {
                 drawModel = q.Receive<PowerballDrawModel>();
                 if (drawModel != null)

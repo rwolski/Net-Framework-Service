@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core
+namespace Framework
 {
     public class EntityFieldAttribute : Attribute
     {
@@ -33,8 +33,24 @@ namespace Core
         }
     }
 
-    public class IgnoreField : Attribute
+    public class IgnoreFieldAttribute : Attribute
     {
+    }
 
+    public class IndexFieldAttribute : Attribute
+    {
+        public int Sequence { get; private set; }
+        public bool IsAscending { get; private set; }
+
+        public IndexFieldAttribute(int sequence, bool ascending)
+        {
+            Sequence = sequence;
+            IsAscending = ascending;
+        }
+
+        public IndexFieldAttribute()
+            : this(0, true)
+        {
+        }
     }
 }

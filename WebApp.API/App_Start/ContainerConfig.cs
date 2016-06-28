@@ -1,6 +1,8 @@
 ﻿using Autofac;
 using Autofac.Integration.WebApi;
-using Core;
+using Framework.Cache;
+using Framework.Data;
+using Framework.Queue;
 using System.Reflection;
 using System.Web.Http;
 
