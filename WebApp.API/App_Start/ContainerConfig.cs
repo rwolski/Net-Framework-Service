@@ -34,8 +34,8 @@ namespace WebApp.API
             var config = GlobalConfiguration.Configuration;
             //var localhost = new HttpSelfHostConfiguration("http://localhost:80");
             var localhost = new HttpConfiguration();
-            config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
-            localhost.DependencyResolver = new AutofacWebApiDependencyResolver(container);
+            config.DependencyResolver = new AutofacWebApiDependencyResolver(container.BeginLifetimeScope());
+            localhost.DependencyResolver = new AutofacWebApiDependencyResolver(container.BeginLifetimeScope());
 
             return container;
         }

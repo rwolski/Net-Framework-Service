@@ -1,4 +1,6 @@
-﻿using Framework.Cache;
+﻿using Autofac;
+using Autofac.Integration.WebApi;
+using Framework.Cache;
 using Framework.Queue;
 using System.Web.Http;
 using WebApp.API.Models;
@@ -31,25 +33,31 @@ namespace WebApp.API.Controllers
         /// <returns></returns>
         public PowerballDrawModel Get()
         {
-            var redisProvider = Configuration.DependencyResolver.GetService(typeof(ICacheProvider)) as RedisProvider;
-
-            var store = redisProvider.GetStore(0);
-            var drawModel = store.GetObject<PowerballDrawModel>();
-
-            if (drawModel != null)
+            using (var scope = this.BeginScope())
             {
-                return drawModel;
-            }
+                //var redisProvider = scope.GetService<RedisProvider>();
+                var redisProvider = scope.Resolve<ICacheProvider>();
 
-            var queueProvider = Configuration.DependencyResolver.GetService(typeof(IQueueProvider)) as RabbitMQProvider;
-            using (var q = queueProvider.GetQueue<PowerballDrawModel>())
-            {
-                drawModel = q.Receive<PowerballDrawModel>();
+                var store = redisProvider.GetStore(0);
+                var drawModel = store.GetObject<PowerballDrawModel>();
+
                 if (drawModel != null)
-                    store.SetObject(drawModel);
+                {
+                    return drawModel;
+                }
 
-                return drawModel;
+                //var queueProvider = scope.GetService<RabbitMQProvider>();
+                var queueProvider = scope.Resolve<IQueueProvider>();
+                using (var q = queueProvider.GetQueue<PowerballDrawModel>())
+                {
+                    drawModel = q.Receive<PowerballDrawModel>();
+                    if (drawModel != null)
+                        store.SetObject(drawModel);
+
+                    return drawModel;
+                }
             }
+                
         }
     }
 }
