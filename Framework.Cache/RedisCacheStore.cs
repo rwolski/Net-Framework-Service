@@ -108,6 +108,11 @@ namespace Framework.Cache
             SetObject<T>(cacheAttribute.CacheName, obj, expiryMinutes);
         }
 
+        public void Unset(string key)
+        {
+            _client.Remove(key);
+        }
+
         #endregion
     }
 }

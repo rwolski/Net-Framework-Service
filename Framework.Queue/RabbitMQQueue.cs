@@ -61,7 +61,8 @@ namespace Framework.Queue
             if (result == null)
                 return default(T);
 
-            var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(result.Body));
+            var jsonStr = Encoding.UTF8.GetString(result.Body);
+            var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(jsonStr);
 
             return obj;
         }

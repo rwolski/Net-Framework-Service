@@ -3,13 +3,21 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Framework.Tests
 {
+    [TestClass]
     public abstract class FrameworkUnitTest
     {
         private static IContainer _globalContainer;
-        protected static ILifetimeScope Container;
+        protected ILifetimeScope Container;
+        private TestContext _testContext;
 
         public FrameworkUnitTest()
         {
+        }
+
+        public TestContext TestContext
+        {
+            get { return _testContext; }
+            set { _testContext = value; }
         }
 
         [AssemblyInitialize()]
@@ -20,8 +28,6 @@ namespace Framework.Tests
             builder.RegisterModule<TestModules>();
 
             _globalContainer = builder.Build();
-
-            Container = _globalContainer.BeginLifetimeScope();
         }
 
         [ClassInitialize()]
@@ -29,15 +35,33 @@ namespace Framework.Tests
         {
             var builder = new ContainerBuilder();
 
-            builder.RegisterModule<TestModules>();
+            //builder.RegisterModule<TestModules>();
 
-            _globalContainer = builder.Build();
+            //_globalContainer = builder.Build();
 
-            Container = _globalContainer.BeginLifetimeScope();
+            //Container = _globalContainer.BeginLifetimeScope();
         }
 
         [AssemblyCleanup]
         public static void AssemblyCleanup()
+        {
+            _globalContainer.Dispose();
+        }
+
+        [ClassCleanup]
+        public static void ClassCleanup()
+        {
+            var i = 3;
+        }
+
+        [TestInitialize]
+        public virtual void TestInitialize()
+        {
+            Container = _globalContainer.BeginLifetimeScope();
+        }
+
+        [TestCleanup]
+        public virtual void TestCleanup()
         {
             Container.Dispose();
         }

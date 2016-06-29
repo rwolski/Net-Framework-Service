@@ -1,35 +1,37 @@
-﻿using MongoDB.Bson;
+﻿using Framework;
+using Framework.Data;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace Framework.Data
 {
-    public class MongoEntityStorage<T> : IEntityStorage<T> where T : IEntity
+    public class MongoEntityStorage<T> : IEntityStorage<T> where T : Entity
     {
-        readonly IDatabaseConnection _connection;
         readonly IMongoCollection<T> _collection;
 
 
-        public MongoEntityStorage(IDatabaseConnection connection)
+        public MongoEntityStorage(IMongoCollection<T> collection)
         {
-            _connection = connection;
-            _collection = _connection.GetCollection<T>(typeof(T).Name);
+            _collection = collection;
         }
 
         public void Save(T entity)
         {
             if (entity.Id == null)
             {
+                entity.CreatedDateTime = DateTime.Now;
+                entity.UpdatedDateTime = DateTime.Now;
                 _collection.InsertOne(entity);
             }
             else
             {
+                entity.UpdatedDateTime = DateTime.Now;
                 var update = BuildUpdatedFields(entity);
-                _collection.UpdateOne(x => x.Id == entity.Id, update, new UpdateOptions()
+                _collection.FindOneAndUpdate<T>(x => x.Id == entity.Id, update, new FindOneAndUpdateOptions<T, T>()
                 {
                     IsUpsert = true
                 });
@@ -54,14 +56,43 @@ namespace Framework.Data
             return _collection.Find(x => x.Id == id).FirstOrDefault();
         }
 
-        public IEnumerable<T> Find(System.Linq.Expressions.Expression<Func<T, bool>> expression)
+        public T FindFirstOrDefault(WhereCondition<T> whereConditions, IEnumerable<OrderBy<T>> orderBy = null)
         {
-            return _collection.Find(expression).ToEnumerable();
+            return Find(whereConditions, orderBy, 1).FirstOrDefault();
         }
 
         public IEnumerable<T> FindAll()
         {
-            return _collection.Find(new BsonDocument() { }).ToEnumerable();
+            return _collection.Find(x => true).ToEnumerable();
+        }
+
+        public IEnumerable<T> Find(Expression<Func<T, bool>> whereConditions)
+        {
+            if (whereConditions == null)
+                throw new ArgumentNullException("whereConditions");
+
+            return _collection.Find(whereConditions).ToEnumerable();
+        }
+
+        public IEnumerable<T> Find(WhereCondition<T> whereConditions, IEnumerable<OrderBy<T>> orderBy = null,
+            int? limit = null)
+        {
+            var result = _collection.Find(whereConditions);
+            if (orderBy != null)
+            {
+                foreach (var statement in orderBy)
+                {
+                    if (statement.Ascending)
+                        result = result.SortBy(statement.Exp);
+                    else
+                        result = result.SortByDescending(statement.Exp);
+                }
+            }
+
+            if (limit.HasValue)
+                result.Limit(limit);
+
+            return result.ToEnumerable();
         }
 
         private UpdateDefinition<T> BuildUpdatedFields(T entity)

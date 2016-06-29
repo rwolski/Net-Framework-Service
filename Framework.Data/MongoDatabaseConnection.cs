@@ -1,9 +1,8 @@
-﻿using MongoDB.Bson;
+﻿using Framework.API;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Framework.Data
@@ -20,7 +19,7 @@ namespace Framework.Data
             _database = database;
         }
 
-        public IMongoCollection<T> GetCollection<T>(string entityType)
+        public IEntityStorage<T> GetCollection<T>(string entityType) where T : Entity
         {
             var collection = _database.GetCollection<T>(entityType);
 
@@ -29,7 +28,34 @@ namespace Framework.Data
             if (index != null)
                 collection.Indexes.CreateOneAsync(index);
 
-            return collection;
+            return new MongoEntityStorage<T>(collection);
+        }
+
+        public IEntityStorage<T> GetCollection<T>() where T : Entity
+        {
+            var entityName = GetDatabaseFromType<T>();
+            return GetCollection<T>(entityName);
+        }
+
+        public IStorage GetCollection(string name)
+        {
+            var collection = _database.GetCollection<BsonDocument>(name);
+
+            return new MongoStorage(collection);
+        }
+
+        public Task DropCollection(string entityType)
+        {
+            return _database.DropCollectionAsync(entityType);
+        }
+
+        private string GetDatabaseFromType<T>()
+        {
+            var attr = typeof(T).GetCustomAttributes(typeof(PersistedEntityAttribute), false).FirstOrDefault() as PersistedEntityAttribute;
+            if (attr == null || string.IsNullOrWhiteSpace(attr.EntityName))
+                return typeof(T).Name;
+
+            return attr.EntityName;
         }
 
         private IndexKeysDefinition<T> BuildIndex<T>()

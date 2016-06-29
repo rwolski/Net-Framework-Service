@@ -1,5 +1,6 @@
-﻿using Framework;
+﻿using Framework.Data;
 using Framework.Queue;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -13,9 +14,19 @@ namespace WebApp.API.Models
     public class OzLottoDrawModel : Entity
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="OzLottoDrawModel"/> class.
+        /// </summary>
+        public OzLottoDrawModel()
+        {
+        }
+
+        #region Members
+
+        /// <summary>
         /// Gets the name of the entity.
         /// </summary>
-        [IgnoreField]
+        [FieldIgnore]
+        [JsonIgnore]
         public override string EntityName
         {
             get
@@ -28,24 +39,72 @@ namespace WebApp.API.Models
         /// The draw winning numbers
         /// </summary>
         [EntityField("draw_winning_numbers")]
+        [JsonProperty("draw_winning_numbers")]
         public IEnumerable<int> DrawWinningNumbers { get; set; }
 
         /// <summary>
         /// The draw date time
         /// </summary>
+        [IndexField(Sequence = 1)]
         [EntityField("draw_date_time")]
+        [JsonProperty("draw_date_time")]
         public DateTime DrawDateTime { get; set; }
 
         /// <summary>
         /// The draw number
         /// </summary>
+        [IndexField(Sequence = 2)]
         [EntityField("draw_number")]
+        [JsonProperty("draw_number")]
         public int DrawNumber { get; set; }
 
         /// <summary>
         /// The draw status
         /// </summary>
         [EntityField("draw_status")]
+        [JsonProperty("draw_status")]
         public DrawStatusCode DrawStatus { get; set; }
+
+        #endregion
+
+        #region IEquals
+
+        /// <summary>
+        /// Determines whether the specified <see cref="System.Object" />, is equal to this instance.
+        /// </summary>
+        /// <param name="obj">The <see cref="System.Object" /> to compare with this instance.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+                return false;
+
+            return Equals((OzLottoDrawModel)obj);
+        }
+
+        /// <summary>
+        /// Equalses the specified other.
+        /// </summary>
+        /// <param name="other">The other.</param>
+        /// <returns></returns>
+        public bool Equals(OzLottoDrawModel other)
+        {
+            return this.DrawNumber == other.DrawNumber;
+        }
+
+        /// <summary>
+        /// Returns a hash code for this instance.
+        /// </summary>
+        /// <returns>
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
+        /// </returns>
+        public override int GetHashCode()
+        {
+            return this.DrawNumber.GetHashCode();
+        }
+
+        #endregion
     }
 }

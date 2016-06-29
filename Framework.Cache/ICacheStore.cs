@@ -30,6 +30,8 @@ namespace Framework.Cache
 
         void SetObject<T>(T obj, int expiryMinutes = 60);
 
+        void Unset(string key);
+
         #endregion
     }
 }

@@ -1,8 +1,6 @@
 ﻿using MongoDB.Driver;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Framework.Data
@@ -10,9 +8,11 @@ namespace Framework.Data
     public class MongoDatabaseProvider : IDatabaseProvider
     {
         readonly MongoClient _client;
+        readonly string _defaultDatabase;
         const string connectionString = "mongodb://{0}:{1}";
 
-        public MongoDatabaseProvider(string hostname = "localhost", int port = 27017)
+
+        public MongoDatabaseProvider(string hostname = "localhost", int port = 27017, string defaultDatabase = null)
         {
             if (string.IsNullOrWhiteSpace(hostname))
                 throw new ArgumentNullException("hostname");
@@ -20,6 +20,7 @@ namespace Framework.Data
                 throw new ArgumentOutOfRangeException("port");
 
             _client = new MongoClient(string.Format(connectionString, hostname, port));
+            _defaultDatabase = defaultDatabase;
         }
 
         public IDatabaseConnection GetDatabase(string database)
@@ -30,10 +31,17 @@ namespace Framework.Data
             return new MongoDatabaseConnection(_client.GetDatabase(database));
         }
 
-        public IDatabaseConnection GetDatabase<T>()
+        public IDatabaseConnection GetDatabase()
         {
-            var databaseName = GetDatabaseFromType<T>();
-            return new MongoDatabaseConnection(_client.GetDatabase(databaseName));
+            if (string.IsNullOrWhiteSpace(_defaultDatabase))
+                throw new InvalidOperationException("Cannot initialize default database without database name");
+
+            return new MongoDatabaseConnection(_client.GetDatabase(_defaultDatabase));
+        }
+
+        public Task DropDatabase(string database)
+        {
+            return _client.DropDatabaseAsync(database);
         }
 
         private string GetDatabaseFromType<T>()

@@ -35,10 +35,9 @@ namespace WebApp.API.Controllers
         {
             using (var scope = this.BeginScope())
             {
-                //var redisProvider = scope.GetService<RedisProvider>();
-                var redisProvider = scope.Resolve<ICacheProvider>();
+                var cacheProvider = scope.Resolve<ICacheProvider>();
 
-                var store = redisProvider.GetStore(0);
+                var store = cacheProvider.GetStore(0);
                 var drawModel = store.GetObject<PowerballDrawModel>();
 
                 if (drawModel != null)
@@ -46,7 +45,6 @@ namespace WebApp.API.Controllers
                     return drawModel;
                 }
 
-                //var queueProvider = scope.GetService<RabbitMQProvider>();
                 var queueProvider = scope.Resolve<IQueueProvider>();
                 using (var q = queueProvider.GetQueue<PowerballDrawModel>())
                 {
@@ -57,7 +55,6 @@ namespace WebApp.API.Controllers
                     return drawModel;
                 }
             }
-                
         }
     }
 }

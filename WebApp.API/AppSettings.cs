@@ -17,6 +17,7 @@ namespace WebApp.API
         const string RabbitMQPortKey = "RabbitMQPort";
         const string MongoDbHostnameKey = "MongoDbHostname";
         const string MongoDbPortKey = "MongoDbPort";
+        const string MongoDbDatabaseKey = "MongoDbDatabase";
 
         /// <summary>
         /// Gets the redis hostname.
@@ -127,6 +128,24 @@ namespace WebApp.API
                 if (string.IsNullOrWhiteSpace(str) || !Int32.TryParse(str, out val))
                     throw new ArgumentNullException(MongoDbPortKey);
                 return val;
+            }
+        }
+
+        /// <summary>
+        /// Gets the mongo db database name.
+        /// </summary>
+        /// <value>
+        /// The mongo db database name.
+        /// </value>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        public static string MongoDbDatabase
+        {
+            get
+            {
+                var str = ConfigurationManager.AppSettings[MongoDbDatabaseKey];
+                if (string.IsNullOrWhiteSpace(str))
+                    throw new ArgumentNullException(MongoDbDatabaseKey);
+                return str;
             }
         }
     }
