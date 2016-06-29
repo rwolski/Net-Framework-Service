@@ -9,7 +9,7 @@ namespace Framework.Data
     /// </summary>
     /// <seealso cref="Core.IEntity" />
     [PersistedEntity]
-    public abstract class Entity : IEntity, IUpdateAudit
+    public abstract class Entity : IEntity, IAuditable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Entity"/> class.
@@ -17,6 +17,7 @@ namespace Framework.Data
         public Entity()
         {
             CreatedDateTime = DateTime.Now;
+            Version = 1;
         }
 
         /// <summary>
@@ -70,6 +71,15 @@ namespace Framework.Data
         /// </value>
         [EntityField("updated_date_time")]
         public virtual DateTime? UpdatedDateTime { get; set; }
+
+        /// <summary>
+        /// Gets the version.
+        /// </summary>
+        /// <value>
+        /// The version.
+        /// </value>
+        [EntityField("version", Incrementing = true)]
+        public virtual int Version { get; set; }
 
 
         /// <summary>

@@ -11,6 +11,7 @@ namespace WebApp.API.Controllers
     /// Powerball draw controller
     /// </summary>
     /// <seealso cref="System.Web.Http.ApiController" />
+    [AutofacControllerConfiguration]
     public class PowerballController : ApiController
     {
         /// <summary>

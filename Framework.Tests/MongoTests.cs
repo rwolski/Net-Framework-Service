@@ -45,6 +45,7 @@ namespace Framework.Tests
 
             var provider = Container.Resolve<IDatabaseProvider>();
             var store = provider.GetDatabase(_database);
+            store.DropCollection(_collection);
             var collection = store.GetCollection<MongoTestEntity>(_collection);
 
             var findResult = collection.FindAll();
@@ -59,7 +60,7 @@ namespace Framework.Tests
             entity1 = null;
 
             // Test the find by id
-            entity1 = collection.FindByIdentity(entity1.Id);
+            entity1 = collection.FindByIdentity(identity);
             Assert.IsNotNull(entity1);
 
             var entity2 = new MongoTestEntity()

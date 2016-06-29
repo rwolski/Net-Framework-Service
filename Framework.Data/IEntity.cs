@@ -17,10 +17,12 @@ namespace Framework.Data
         int GetHashCode();
     }
 
-    public interface IUpdateAudit
+    public interface IAuditable
     {
         DateTime? CreatedDateTime { get; }
 
         DateTime? UpdatedDateTime { get; set; }
+
+        int Version { get; }
     }
 }

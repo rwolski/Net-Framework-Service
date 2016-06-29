@@ -19,6 +19,29 @@ namespace Framework.Data
             _collection = collection;
         }
 
+        //public void SaveUpdate(T entity)
+        //{
+        //    if (entity.Id == null)
+        //    {
+        //        entity.CreatedDateTime = DateTime.Now;
+        //        entity.UpdatedDateTime = DateTime.Now;
+        //        _collection.ReplaceOne(x => false, entity, new UpdateOptions() { IsUpsert = true });
+        //    }
+        //    else
+        //    {
+        //        entity.UpdatedDateTime = DateTime.Now;
+        //        var update = BuildUpdatedFields(entity);
+        //        if (update == null)
+        //            return;
+
+        //        //_collection.FindOneAndReplace<T>(x => x.Id == entity.Id, entity, new FindOneAndReplaceOptions<T, T>()
+        //        _collection.FindOneAndUpdate<T>(x => x.Id == entity.Id, update, new FindOneAndUpdateOptions<T, T>()
+        //        {
+        //            IsUpsert = true
+        //        });
+        //    }
+        //}
+
         public void Save(T entity)
         {
             if (entity.Id == null)
@@ -30,8 +53,8 @@ namespace Framework.Data
             else
             {
                 entity.UpdatedDateTime = DateTime.Now;
-                var update = BuildUpdatedFields(entity);
-                _collection.FindOneAndUpdate<T>(x => x.Id == entity.Id, update, new FindOneAndUpdateOptions<T, T>()
+                entity.Version++;
+                _collection.FindOneAndReplace<T>(x => x.Id == entity.Id, entity, new FindOneAndReplaceOptions<T, T>()
                 {
                     IsUpsert = true
                 });
@@ -77,7 +100,13 @@ namespace Framework.Data
         public IEnumerable<T> Find(WhereCondition<T> whereConditions, IEnumerable<OrderBy<T>> orderBy = null,
             int? limit = null)
         {
-            var result = _collection.Find(whereConditions);
+            IFindFluent<T, T> result;
+
+            if (whereConditions != null)
+                result = _collection.Find(whereConditions);
+            else
+                result = _collection.Find(new BsonDocument());
+
             if (orderBy != null)
             {
                 foreach (var statement in orderBy)
@@ -105,12 +134,19 @@ namespace Framework.Data
                 EntityMapping = x.GetCustomAttributes(typeof(EntityFieldAttribute), true).Cast<EntityFieldAttribute>().FirstOrDefault()
             }).Where(x => x.EntityMapping != null);
 
+            UpdateDefinition<T> result = builder.ToBsonDocument();
+
             foreach (var prop in props)
             {
-                builder.Set(prop.EntityMapping.FieldName ?? prop.Property.Name, prop.Property.GetValue(entity));
+                var field = prop.EntityMapping.FieldName ?? prop.Property.Name;
+                var val = prop.Property.GetValue(entity);
+                if (!prop.EntityMapping.Incrementing)
+                    result = result.Set(field, val);
+                else
+                    result = result.Inc(field, 1);
             }
 
-            return builder.ToBsonDocument();
+            return result;
         }
     }
 }

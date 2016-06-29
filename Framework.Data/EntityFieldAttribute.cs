@@ -9,48 +9,45 @@ namespace Framework.Data
     public class EntityFieldAttribute : Attribute
     {
         public string FieldName { get; private set; }
-        public bool IdField { get; set; }
+        public bool Incrementing { get; set; }
 
-        public EntityFieldAttribute(string fieldName)
+        public EntityFieldAttribute(string fieldName = null)
         {
             FieldName = fieldName;
-        }
-
-        public EntityFieldAttribute()
-        {
+            Incrementing = false;
         }
     }
 
     public class IdFieldAttribute : EntityFieldAttribute
     {
-        public IdFieldAttribute(string fieldName)
+        public IdFieldAttribute(string fieldName = null)
             : base(fieldName)
         {
         }
-
-        public IdFieldAttribute()
-        {
-        }
     }
+
+    //public class VersionFieldAttribute : EntityFieldAttribute
+    //{
+    //    public VersionFieldAttribute(string fieldName = null)
+    //        : base(fieldName)
+    //    {
+    //    }
+    //}
 
     public class FieldIgnoreAttribute : Attribute
     {
     }
 
-    public class IndexFieldAttribute : Attribute
+    public class IndexFieldAttribute : EntityFieldAttribute
     {
         public int Sequence { get; set; }
         public bool IsAscending { get; set; }
 
-        public IndexFieldAttribute(int sequence, bool ascending)
+        public IndexFieldAttribute(string fieldName = null, int sequence = 0, bool ascending = true)
+            : base(fieldName)
         {
             Sequence = sequence;
             IsAscending = ascending;
-        }
-
-        public IndexFieldAttribute()
-            : this(0, true)
-        {
         }
     }
 }

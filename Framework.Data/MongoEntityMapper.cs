@@ -31,16 +31,19 @@ namespace Framework.Data
                     if (idAttr != null)
                     {
                         var id = cm.MapIdMember(prop).SetIdGenerator(CombGuidGenerator.Instance);
-                        if (!string.IsNullOrEmpty(idAttr.FieldName))
-                            id.SetElementName(idAttr.FieldName);
-                        else
-                            id.SetElementName("_id");
-                        //cm.SetIdMember(id);
+                        id.SetElementName(idAttr.FieldName ?? "_id");
                         continue;
                     }
 
+                    //var versionAttr = prop.GetCustomAttributes(typeof(VersionFieldAttribute), true).Cast<VersionFieldAttribute>().FirstOrDefault();
+                    //if (versionAttr != null)
+                    //{
+                    //    var id = cm.(prop).SetIdGenerator(CombGuidGenerator.Instance);
+                    //    id.SetElementName(idAttr.FieldName ?? "_id");
+                    //    continue;
+                    //}
+
                     var propAttr = prop.GetCustomAttributes(typeof(EntityFieldAttribute), true).Cast<EntityFieldAttribute>().FirstOrDefault();
-                    //var map = cm.MapProperty(prop.Name);
                     var map = cm.MapMember(prop);
                     if (propAttr != null && !string.IsNullOrEmpty(propAttr.FieldName))
                         map.SetElementName(propAttr.FieldName);

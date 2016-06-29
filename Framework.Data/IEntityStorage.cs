@@ -39,7 +39,7 @@ namespace Framework.Data
 
         public static implicit operator Expression<Func<T, bool>>(WhereCondition<T> exp)
         {
-            return exp.Exp;
+            return exp != null ? exp.Exp : null;
         }
     };
 
