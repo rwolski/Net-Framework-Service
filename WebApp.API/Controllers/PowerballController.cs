@@ -11,7 +11,7 @@ namespace WebApp.API.Controllers
     /// Powerball draw controller
     /// </summary>
     /// <seealso cref="System.Web.Http.ApiController" />
-    [AutofacControllerConfiguration]
+    //[AutofacControllerConfiguration]
     public class PowerballController : ApiController
     {
         /// <summary>
@@ -38,7 +38,7 @@ namespace WebApp.API.Controllers
             {
                 var cacheProvider = scope.Resolve<ICacheProvider>();
 
-                var store = cacheProvider.GetStore(0);
+                var store = cacheProvider.GetStore(AppSettings.RedisDatabaseIndex);
                 var drawModel = store.GetObject<PowerballDrawModel>();
 
                 if (drawModel != null)

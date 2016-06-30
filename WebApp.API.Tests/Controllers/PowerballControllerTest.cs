@@ -1,65 +1,50 @@
-﻿using Framework.Tests;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
-using System.Linq;
-using WebApp.API.Controllers;
-using Autofac.Integration.WebApi;
-using System.Web.Http;
-using Framework.Queue;
+﻿using Autofac;
+using Autofac.Extras.Moq;
 using Framework.Cache;
-using WebApp.API.Models;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
+using WebApp.API.Controllers;
+using WebApp.API.Models;
 
 namespace WebApp.API.Tests.Controllers
 {
-    public class PowerballControllerTest : FrameworkUnitTest
+    [TestClass]
+    public class PowerballControllerTest : ControllerUnitTest
     {
-        HttpConfiguration _httpConfig;
-
-        [TestInitialize]
-        public override void TestInitialize()
-        {
-            base.TestInitialize();
-
-            _httpConfig = new HttpConfiguration()
-            {
-                DependencyResolver = new AutofacWebApiDependencyResolver(Container)
-            };
-        }
-
-        [TestCleanup]
-        public override void TestCleanup()
-        {
-            base.TestCleanup();
-
-            _httpConfig.Dispose();
-        }
-
         [TestMethod]
         public void PowerballCacheGet()
         {
-            // Arrange
-            PowerballController controller = new PowerballController()
+            DateTime drawTime = DateTime.Now;
+
+            using (var mock = AutoMock.GetLoose())
             {
-                Configuration = _httpConfig
-            };
+                var queue = mock.Mock<ICacheStore>();
+                queue.Setup(x => x.GetObject<PowerballDrawModel>()).Returns(new PowerballDrawModel()
+                {
+                    DrawNumber = 1,
+                    DrawDateTime = DateTime.Now,
+                    DrawStatus = DrawStatusCode.Closed,
+                    DrawWinningNumbers = new List<int>() { 2, 3, 4 }
+                });
 
-            var queue = new Moq.Mock<ICacheStore>();
-            queue.Setup(x => x.GetObject<PowerballDrawModel>()).Returns(new PowerballDrawModel()
-            {
-                DrawNumber = 1,
-                DrawDateTime = DateTime.Now,
-                DrawStatus = DrawStatusCode.Closed,
-                DrawWinningNumbers = new List<int>() { 2, 3, 4 }
-            });
+                var builder = new ContainerBuilder();
+                builder.Register(c => queue.Object).As<ICacheStore>().InstancePerLifetimeScope();
+                UpdateContainer(builder);
 
-            var result = controller.Get();
+                // Arrange
+                var controller = Container.Resolve<PowerballController>();
+                controller.Configuration = HttpConfig;
 
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(1, result.DrawNumber);
-            Assert.AreEqual("value1", result.ElementAt(0));
-            Assert.AreEqual("value2", result.ElementAt(1));
+                var result = controller.Get();
+
+                // Assert
+                Assert.IsNotNull(result);
+                Assert.AreEqual(1, result.DrawNumber);
+                Assert.AreEqual(drawTime, result.DrawDateTime);
+                Assert.AreEqual(DrawStatusCode.Closed, result.DrawStatus);
+                Assert.AreEqual(new List<int>() { 1, 2, 3, 4 }, result.DrawWinningNumbers);
+            }
         }
     }
 }

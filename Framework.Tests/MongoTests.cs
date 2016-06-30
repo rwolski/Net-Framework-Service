@@ -22,20 +22,6 @@ namespace Framework.Tests
             public int TestField { get; set; }
         }
 
-        //[ClassInitialize]
-        //public static void ClassInitialise(TestContext context)
-        //{
-        //    var provider = Container.Resolve<IDatabaseProvider>();
-        //    var store = provider.GetDatabase(_database);
-        //}
-
-        //[ClassCleanup]
-        //public static void ClassCleanup()
-        //{
-        //    var provider = Container.Resolve<IDatabaseProvider>();
-        //    provider.DropDatabase(_database);
-        //}
-
         [TestMethod]
         [TestCategory("MongoTests")]
         public void MongoLifecycleTest()

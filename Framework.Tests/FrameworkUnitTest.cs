@@ -7,6 +7,8 @@ namespace Framework.Tests
     public abstract class FrameworkUnitTest
     {
         private static IContainer _globalContainer;
+        private static ILifetimeScope _globalScope;
+
         protected ILifetimeScope Container;
         private TestContext _testContext;
 
@@ -28,36 +30,20 @@ namespace Framework.Tests
             builder.RegisterModule<TestModules>();
 
             _globalContainer = builder.Build();
-        }
-
-        [ClassInitialize()]
-        public static void ClassInitialise(TestContext context)
-        {
-            var builder = new ContainerBuilder();
-
-            //builder.RegisterModule<TestModules>();
-
-            //_globalContainer = builder.Build();
-
-            //Container = _globalContainer.BeginLifetimeScope();
-        }
-
-        [AssemblyCleanup]
-        public static void AssemblyCleanup()
-        {
-            _globalContainer.Dispose();
-        }
-
-        [ClassCleanup]
-        public static void ClassCleanup()
-        {
-            var i = 3;
+            _globalScope = _globalContainer.BeginLifetimeScope();
         }
 
         [TestInitialize]
         public virtual void TestInitialize()
         {
-            Container = _globalContainer.BeginLifetimeScope();
+            Container = _globalScope.BeginLifetimeScope();
+        }
+
+        [AssemblyCleanup]
+        public static void AssemblyCleanup()
+        {
+            _globalScope.Dispose();
+            _globalContainer.Dispose();
         }
 
         [TestCleanup]

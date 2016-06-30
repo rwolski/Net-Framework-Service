@@ -17,13 +17,12 @@ namespace WebApp.API
         /// Builds this container instance.
         /// </summary>
         /// <returns></returns>
-        public static IContainer RegisterModules()
+        public static ContainerBuilder RegisterModules(ContainerBuilder builder = null)
         {
-            var builder = new ContainerBuilder();
+            if (builder == null)
+                builder = new ContainerBuilder();
 
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
-
-            //builder.RegisterModule(Core.)
 
             // Register the classes we need
             builder.Register(c => new RedisProvider(AppSettings.RedisHostname, AppSettings.RedisPort)).As<ICacheProvider>().SingleInstance();
@@ -31,12 +30,23 @@ namespace WebApp.API
             builder.Register(c => new MongoDatabaseProvider(AppSettings.MongoDbHostname, AppSettings.MongoDbPort, AppSettings.MongoDbDatabase))
                 .As<IDatabaseProvider>().SingleInstance();
 
+            builder.RegisterModule(new QueueModule());
+
+            return builder;
+        }
+
+        /// <summary>
+        /// Builds the specified builder.
+        /// </summary>
+        /// <param name="builder">The builder.</param>
+        /// <returns></returns>
+        public static IContainer Build(ContainerBuilder builder)
+        {
             var container = builder.Build();
             var config = GlobalConfiguration.Configuration;
-            //var localhost = new HttpSelfHostConfiguration("http://localhost:80");
-            var localhost = new HttpConfiguration();
+            //var localhost = new HttpConfiguration();
             config.DependencyResolver = new AutofacWebApiDependencyResolver(container.BeginLifetimeScope());
-            localhost.DependencyResolver = new AutofacWebApiDependencyResolver(container.BeginLifetimeScope());
+            //localhost.DependencyResolver = new AutofacWebApiDependencyResolver(container.BeginLifetimeScope());
 
             return container;
         }

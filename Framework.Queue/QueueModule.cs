@@ -1,15 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using Autofac;
+using MassTransit;
+using System;
 
 namespace Framework.Queue
 {
-    public class QueueModule
+    public class QueueModule : Autofac.Module
     {
-        //public static void Build(IContainer )
-        //{
+        protected override void Load(ContainerBuilder builder)
+        {
+            builder.Register(context =>
+            {
+                var busControl = Bus.Factory.CreateUsingRabbitMq(cfg =>
+                {
+                    var host = cfg.Host(new Uri("localhost"), h =>
+                    {
+                        h.Username("guest");
+                        h.Password("guest");
+                    });
+                });
 
-        //}
+                return busControl.GetSendEndpoint(new Uri("blah"));
+            }).SingleInstance().As<IBusControl>().As<IBus>();
+        }
     }
 }

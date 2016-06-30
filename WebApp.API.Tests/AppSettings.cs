@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Configuration;
 
-namespace WebApp.API
+namespace WebApp.API.Tests
 {
     /// <summary>
     /// Internal app settings dictionary

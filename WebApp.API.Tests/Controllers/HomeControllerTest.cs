@@ -5,10 +5,10 @@ using WebApp.API.Controllers;
 
 namespace WebApp.API.Tests.Controllers
 {
-    [TestClass]
+    //[TestClass]
     public class HomeControllerTest
     {
-        [TestMethod]
+        //[TestMethod]
         public void Index()
         {
             // Arrange

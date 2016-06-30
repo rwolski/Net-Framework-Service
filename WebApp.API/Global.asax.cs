@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Autofac;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -20,21 +21,21 @@ namespace WebApp.API
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             MongoConfig.RegisterTypes();
-            ContainerConfig.RegisterModules();
+            ContainerConfig.Build(ContainerConfig.RegisterModules());
         }
 
-        //protected void Application_Error(Object sender, EventArgs e)
-        //{
-        //    if (!System.Diagnostics.EventLog.SourceExists
-        //    ("ASPNETApplication"))
-        //    {
-        //        System.Diagnostics.EventLog.CreateEventSource
-        //           ("ASPNETApplication", "Application");
-        //    }
-        //    System.Diagnostics.EventLog.WriteEntry
-        //        ("ASPNETApplication",
-        //        Server.GetLastError().Message);
-        //}
+        protected void Application_Error(Object sender, EventArgs e)
+        {
+            if (!System.Diagnostics.EventLog.SourceExists
+            ("ASPNETApplication"))
+            {
+                System.Diagnostics.EventLog.CreateEventSource
+                   ("ASPNETApplication", "Application");
+            }
+            System.Diagnostics.EventLog.WriteEntry
+                ("ASPNETApplication",
+                Server.GetLastError().Message);
+        }
 
         protected void Application_BeginRequest()
         {

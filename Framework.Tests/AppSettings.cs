@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Web;
 
 namespace Framework.Tests
 {
@@ -13,6 +10,7 @@ namespace Framework.Tests
     {
         const string RedisHostnameKey = "RedisHostname";
         const string RedisPortKey = "RedisPort";
+        const string RedisDatabaseIndexKey = "RedisDatabaseIndex";
         const string RabbitMQHostnameKey = "RabbitMQHostname";
         const string RabbitMQPortKey = "RabbitMQPort";
         const string MongoDbHostnameKey = "MongoDbHostname";
@@ -34,6 +32,25 @@ namespace Framework.Tests
                 if (string.IsNullOrWhiteSpace(str))
                     throw new ArgumentNullException(RedisHostnameKey);
                 return str;
+            }
+        }
+
+        /// <summary>
+        /// Gets the redis database index.
+        /// </summary>
+        /// <value>
+        /// The redis database index.
+        /// </value>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        public static int RedisDatabaseIndex
+        {
+            get
+            {
+                var str = ConfigurationManager.AppSettings[RedisDatabaseIndexKey];
+                int val;
+                if (string.IsNullOrWhiteSpace(str) || !Int32.TryParse(str, out val))
+                    throw new ArgumentNullException(RedisDatabaseIndexKey);
+                return val;
             }
         }
 
@@ -92,7 +109,6 @@ namespace Framework.Tests
                 return val;
             }
         }
-
 
         /// <summary>
         /// Gets the mongo db hostname.
