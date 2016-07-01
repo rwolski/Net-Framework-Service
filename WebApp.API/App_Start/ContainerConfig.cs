@@ -30,7 +30,7 @@ namespace WebApp.API
             builder.Register(c => new MongoDatabaseProvider(AppSettings.MongoDbHostname, AppSettings.MongoDbPort, AppSettings.MongoDbDatabase))
                 .As<IDatabaseProvider>().SingleInstance();
 
-            builder.RegisterModule(new QueueModule());
+            //builder.RegisterModule(new QueueModule());
 
             return builder;
         }
