@@ -93,7 +93,7 @@ namespace Framework.Tests
             Assert.AreEqual(15, findResult.ElementAt(2).TestField);
 
             store.DropCollection(_collection);
-            provider.DropDatabase(_database);
+            provider.DropDatabaseAsync(_database);
         }
     }
 }

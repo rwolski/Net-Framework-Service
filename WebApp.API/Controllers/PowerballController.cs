@@ -1,7 +1,6 @@
-﻿using Autofac;
-using Autofac.Integration.WebApi;
-using Framework.Cache;
+﻿using Framework.Cache;
 using Framework.Queue;
+using System;
 using System.Web.Http;
 using WebApp.API.Models;
 
@@ -12,13 +11,26 @@ namespace WebApp.API.Controllers
     /// </summary>
     /// <seealso cref="System.Web.Http.ApiController" />
     //[AutofacControllerConfiguration]
+    [RoutePrefix("api/powerball")]
     public class PowerballController : ApiController
     {
+        readonly ICacheProvider _cacheProvider;
+        readonly IQueueProvider _queueProvider;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PowerballController"/> class.
         /// </summary>
-        public PowerballController()
+        public PowerballController(ICacheProvider cacheProvider, IQueueProvider queueProvider)
         {
+            if (cacheProvider == null)
+                throw new ArgumentNullException("cacheProvider");
+            if (queueProvider == null)
+                throw new ArgumentNullException("queueProvider");
+
+            _cacheProvider = cacheProvider;
+            _queueProvider = queueProvider;
+
+
             //RabbitMQProvider provider = new RabbitMQProvider(ConfigurationManager.AppSettings["RabbitMQHostname"]);
             //provider.AddQueueSub();
             //using (var q = provider.GetQueue("Powerball"))
@@ -34,27 +46,21 @@ namespace WebApp.API.Controllers
         /// <returns></returns>
         public PowerballDrawModel Get()
         {
-            using (var scope = this.BeginScope())
+            var store = _cacheProvider.GetStore(AppSettings.RedisDatabaseIndex);
+            var drawModel = store.GetObject<PowerballDrawModel>();
+
+            if (drawModel != null)
             {
-                var cacheProvider = scope.Resolve<ICacheProvider>();
+                return drawModel;
+            }
 
-                var store = cacheProvider.GetStore(AppSettings.RedisDatabaseIndex);
-                var drawModel = store.GetObject<PowerballDrawModel>();
-
+            using (var q = _queueProvider.GetQueue<PowerballDrawModel>())
+            {
+                drawModel = q.Receive<PowerballDrawModel>();
                 if (drawModel != null)
-                {
-                    return drawModel;
-                }
+                    store.SetObject(drawModel);
 
-                var queueProvider = scope.Resolve<IQueueProvider>();
-                using (var q = queueProvider.GetQueue<PowerballDrawModel>())
-                {
-                    drawModel = q.Receive<PowerballDrawModel>();
-                    if (drawModel != null)
-                        store.SetObject(drawModel);
-
-                    return drawModel;
-                }
+                return drawModel;
             }
         }
     }

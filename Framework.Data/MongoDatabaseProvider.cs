@@ -39,7 +39,7 @@ namespace Framework.Data
             return new MongoDatabaseConnection(_client.GetDatabase(_defaultDatabase));
         }
 
-        public Task DropDatabase(string database)
+        public Task DropDatabaseAsync(string database)
         {
             return _client.DropDatabaseAsync(database);
         }

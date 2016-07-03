@@ -1,6 +1,5 @@
-﻿using Framework;
-using Framework.Data;
-using WebApp.API.Models;
+﻿using Framework.Data;
+using System.Linq;
 
 namespace WebApp.API
 {
@@ -8,8 +7,13 @@ namespace WebApp.API
     {
         public static void RegisterTypes()
         {
-            MongoEntityMapper.Map<Entity>();
-            MongoEntityMapper.Map<OzLottoDrawModel>();
+            var entityTypes = typeof(MongoConfig).Assembly.GetTypes().Where(x => x.IsDefined(typeof(PersistedEntityAttribute), false));
+
+            foreach (var type in entityTypes)
+                MongoEntityMapper.Map(type);
+
+            //MongoEntityMapper.Map<Entity>();
+            //MongoEntityMapper.Map<OzLottoDrawModel>();
 
         }
     }

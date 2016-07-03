@@ -9,7 +9,6 @@ namespace WebApp.API.Tests
         protected IContainer _globalContainer;
         protected ILifetimeScope Container;
 
-        //private ContainerBuilder _containerBuilder;
         private TestContext _testContext;
 
         public UnitTest()

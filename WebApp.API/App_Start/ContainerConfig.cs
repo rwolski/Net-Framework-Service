@@ -25,10 +25,12 @@ namespace WebApp.API
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
 
             // Register the classes we need
+            var mongoProvider = new MongoDatabaseProvider(AppSettings.MongoDbHostname, AppSettings.MongoDbPort, AppSettings.MongoDbDatabase);
+
             builder.Register(c => new RedisProvider(AppSettings.RedisHostname, AppSettings.RedisPort)).As<ICacheProvider>().SingleInstance();
             builder.Register(c => new RabbitMQProvider(AppSettings.RabbitMQHostname, AppSettings.RabbitMQPort)).As<IQueueProvider>().SingleInstance();
-            builder.Register(c => new MongoDatabaseProvider(AppSettings.MongoDbHostname, AppSettings.MongoDbPort, AppSettings.MongoDbDatabase))
-                .As<IDatabaseProvider>().SingleInstance();
+            builder.Register(c => mongoProvider).As<IDatabaseProvider>().SingleInstance();
+            builder.Register(c => mongoProvider.GetDatabase()).As<IDatabaseConnection>().InstancePerRequest();
 
             //builder.RegisterModule(new QueueModule());
 
@@ -44,10 +46,8 @@ namespace WebApp.API
         {
             var container = builder.Build();
             var config = GlobalConfiguration.Configuration;
-            //var localhost = new HttpConfiguration();
             config.DependencyResolver = new AutofacWebApiDependencyResolver(container.BeginLifetimeScope());
-            //localhost.DependencyResolver = new AutofacWebApiDependencyResolver(container.BeginLifetimeScope());
-
+            
             return container;
         }
     }

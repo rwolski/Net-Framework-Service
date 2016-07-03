@@ -1,18 +1,15 @@
-﻿using RabbitMQ.Client.Events;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace Framework.Queue
 {
-    public interface IQueue : IDisposable
+    public interface IQueue<T> : IDisposable
     {
-        //void AddConsumer(EventHandler<BasicDeliverEventArgs> handler);
+        void Send(T message);
 
-        void Send(object message);
+        void Publish(T message);
 
-        T Receive<T>();
+        T Receive();
+
+        void Consume();
     }
 }

@@ -62,10 +62,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IQueue.cs" />
+    <Compile Include="IServiceProviderSettings.cs" />
+    <Compile Include="MassTransitMessageConsumer.cs" />
+    <Compile Include="MassTransitProvider.cs" />
     <Compile Include="IQueueProvider.cs" />
+    <Compile Include="MassTransitQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueuedEntityAttribute.cs" />
     <Compile Include="QueueModule.cs" />
+    <Compile Include="ServiceProviderSettings.cs" />
     <Compile Include="RabbitMQProvider.cs" />
     <Compile Include="RabbitMQQueue.cs" />
   </ItemGroup>

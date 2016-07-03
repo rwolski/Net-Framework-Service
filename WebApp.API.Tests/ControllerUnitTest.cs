@@ -17,7 +17,6 @@ namespace WebApp.API.Tests
         public override void TestInitialize()
         {
             base.TestInitialize();
-
             BuildHttpConfiguration();
         }
 
@@ -25,7 +24,6 @@ namespace WebApp.API.Tests
         public override void TestCleanup()
         {
             HttpConfig.Dispose();
-
             base.TestCleanup();
         }
 
@@ -35,6 +33,8 @@ namespace WebApp.API.Tests
             {
                 DependencyResolver = new Autofac.Integration.WebApi.AutofacWebApiDependencyResolver(Container)
             };
+
+            GlobalConfiguration.Configuration.DependencyResolver = new Autofac.Integration.WebApi.AutofacWebApiDependencyResolver(Container);
 
             return HttpConfig;
         }

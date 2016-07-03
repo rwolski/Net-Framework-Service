@@ -8,6 +8,6 @@ namespace Framework.Data
 
         IDatabaseConnection GetDatabase();
 
-        Task DropDatabase(string database);
+        Task DropDatabaseAsync(string database);
     }
 }

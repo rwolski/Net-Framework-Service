@@ -27,6 +27,8 @@ namespace WebApp.API
             );
 
             config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
+
+            MongoConfig.RegisterTypes();            
         }
     }
 }

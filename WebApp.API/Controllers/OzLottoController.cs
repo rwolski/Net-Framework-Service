@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Framework.Data;
 using Framework.Queue;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
@@ -15,11 +16,21 @@ namespace WebApp.API.Controllers
     [RoutePrefix("api/ozlotto")]
     public class OzLottoController : ApiController
     {
+        readonly IDatabaseConnection _dataConnection;
+        readonly IQueueProvider _queueProvider;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="OzLottoController"/> class.
         /// </summary>
-        public OzLottoController()
+        public OzLottoController(IDatabaseConnection dataConnection, IQueueProvider queueProvider)
         {
+            if (dataConnection == null)
+                throw new ArgumentNullException("dataConnection");
+            if (queueProvider == null)
+                throw new ArgumentNullException("queueProvider");
+
+            _queueProvider = queueProvider;
+            _dataConnection = dataConnection;
         }
 
 
@@ -29,38 +40,32 @@ namespace WebApp.API.Controllers
         /// <returns></returns>
         public OzLottoDrawModel Get()
         {
-            using (var scope = this.BeginScope())
-            {
-                var dataProvider = scope.Resolve<IDatabaseProvider>();
-                var database = dataProvider.GetDatabase();
-                var store = database.GetCollection<OzLottoDrawModel>();
+            var store = _dataConnection.GetCollection<OzLottoDrawModel>();
 
-                // Get the last closed draw
-                var drawModel = store.FindFirstOrDefault(
-                    new WhereCondition<OzLottoDrawModel>(x => x.DrawStatus == DrawStatusCode.Closed),
-                    new List<OrderBy<OzLottoDrawModel>>()
+            // Get the last closed draw
+            var drawModel = store.FindFirstOrDefault(
+                new WhereCondition<OzLottoDrawModel>(x => x.DrawStatus == DrawStatusCode.Closed),
+                new List<OrderBy<OzLottoDrawModel>>()
+                {
+                    new OrderBy<OzLottoDrawModel>()
                     {
-                        new OrderBy<OzLottoDrawModel>()
-                        {
-                            Exp = x => x.DrawNumber,
-                            Ascending = false
-                        }
-                    });
+                        Exp = x => x.DrawNumber,
+                        Ascending = false
+                    }
+                });
 
+            if (drawModel != null)
+            {
+                return drawModel;
+            }
+
+            using (var q = _queueProvider.GetQueue<OzLottoDrawModel>())
+            {
+                drawModel = q.Receive<OzLottoDrawModel>();
                 if (drawModel != null)
-                {
-                    return drawModel;
-                }
+                    store.Save(drawModel);
 
-                var queueProvider = scope.Resolve<IQueueProvider>();
-                using (var q = queueProvider.GetQueue<OzLottoDrawModel>())
-                {
-                    drawModel = q.Receive<OzLottoDrawModel>();
-                    if (drawModel != null)
-                        store.Save(drawModel);
-
-                    return drawModel;
-                }
+                return drawModel;
             }
         }
     }

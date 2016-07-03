@@ -21,8 +21,8 @@ namespace WebApp.API
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             //SwaggerConfig.Register();
 
-            MongoConfig.RegisterTypes();
-            ContainerConfig.Build(ContainerConfig.RegisterModules());
+            //MongoConfig.RegisterTypes();
+            //ContainerConfig.Build(ContainerConfig.RegisterModules());
         }
 
         protected void Application_Error(Object sender, EventArgs e)
