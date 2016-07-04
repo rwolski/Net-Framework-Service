@@ -1,15 +1,18 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Framework.Queue
 {
     public interface IQueue<T> : IDisposable
     {
-        void Send(T message);
+        Task Send(T message);
 
-        void Publish(T message);
+        Task Publish(T message);
 
-        T Receive();
+        Task<T> Receive();
 
-        void Consume();
+        Task<T> Consume();
+
+        Task<IMessageResponse<T>> Request(IMessageRequest<T> request = null);
     }
 }

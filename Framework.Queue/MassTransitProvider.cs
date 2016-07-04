@@ -7,13 +7,9 @@ using System.Threading.Tasks;
 
 namespace Framework.Queue
 {
-    public class MassTransitProvider : IQueueProvider//, IDisposable
+    public class MassTransitProvider : IQueueProvider
     {
-        //readonly IBusControl _client;
         readonly IServiceProviderSettings _settings;
-        //const string _uriFormat = "{0}:{1}";
-        //const string _username = "guest";
-        //const string _password = "guest";
 
 
         public MassTransitProvider(string hostname = "localhost", UInt16 port = 5672, string username = "guest", string password = "guest")
@@ -26,10 +22,17 @@ namespace Framework.Queue
             _settings = new ServiceProviderSettings(hostname, port);
         }
 
-        public IQueue<T> GetQueue<T>(string queueName = null)
+        public IQueue<T> GetQueue<T>(string queueName) where T : class
         {
             if (string.IsNullOrWhiteSpace(queueName))
-                queueName = GetQueueFromType<T>();
+                throw new ArgumentNullException("queueName");
+
+            return new MassTransitQueue<T>(_settings, queueName);
+        }
+
+        public IQueue<T> GetQueue<T>() where T : class
+        {
+            var queueName = GetQueueFromType<T>();
 
             return new MassTransitQueue<T>(_settings, queueName);
         }
@@ -42,28 +45,5 @@ namespace Framework.Queue
 
             return attr.EntityName;
         }
-
-        //#region Disposable
-
-        //~MassTransitProvider()
-        //{
-        //    Dispose(false);
-        //    GC.SuppressFinalize(this);
-        //}
-
-        //public void Dispose()
-        //{
-        //    Dispose(true);
-        //}
-
-        //protected virtual void Dispose(bool disposing)
-        //{
-        //    if (disposing)
-        //    {
-        //        _client.Stop();
-        //    }
-        //}
-
-        //#endregion
     }
 }

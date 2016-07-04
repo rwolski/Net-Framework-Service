@@ -1,10 +1,12 @@
 	Improve mongodb implementation and test
 
 	Implement unit test framework
-Implement Moq in unit tests
-Investigate how controllers get the dependency resolver - can this be created with moq
+	Implement Moq in unit tests
+	Investigate how controllers get the dependency resolver - can this be created with moq
 
-Implement server side signal r
+	Implement server side signal r
+
+Implement MassTransit on top of rabbit mq
 Implement simple draw results angular page
 Implement simple customer info angular form
 
@@ -12,7 +14,4 @@ Set up visual studio to integrate with gulp to run the api and serve the page up
 
 Implement basic session token system?
 
-Wishlist
-
-Implement MassTransit on top of rabbit mq
 Extend rabbit to publish updates to signal r

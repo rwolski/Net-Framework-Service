@@ -1,6 +1,7 @@
 ﻿using Framework.Cache;
 using Framework.Queue;
 using System;
+using System.Threading.Tasks;
 using System.Web.Http;
 using WebApp.API.Models;
 
@@ -29,14 +30,6 @@ namespace WebApp.API.Controllers
 
             _cacheProvider = cacheProvider;
             _queueProvider = queueProvider;
-
-
-            //RabbitMQProvider provider = new RabbitMQProvider(ConfigurationManager.AppSettings["RabbitMQHostname"]);
-            //provider.AddQueueSub();
-            //using (var q = provider.GetQueue("Powerball"))
-            //{
-            //    q.AddConsumer();
-            //}
         }
 
 
@@ -56,7 +49,7 @@ namespace WebApp.API.Controllers
 
             using (var q = _queueProvider.GetQueue<PowerballDrawModel>())
             {
-                drawModel = q.Receive<PowerballDrawModel>();
+                drawModel = q.Receive().Result;
                 if (drawModel != null)
                     store.SetObject(drawModel);
 

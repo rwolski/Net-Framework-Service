@@ -60,11 +60,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HubHost.cs" />
+    <Compile Include="IHubHost.cs" />
+    <Compile Include="SignalRErrorHandling.cs" />
+    <Compile Include="SignalRHub.cs" />
     <Compile Include="SignalRProvider.cs" />
     <Compile Include="ISocketProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

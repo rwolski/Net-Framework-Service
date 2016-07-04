@@ -7,6 +7,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using WebApp.API.Controllers;
 using WebApp.API.Models;
 
@@ -35,14 +36,14 @@ namespace WebApp.API.Tests.Controllers
                     .Setup(x => x.GetStore(It.IsAny<int>())).Returns(cache.Object);
 
                 // The queued results - shouldn't reach this
-                var queue = mock.Mock<IQueue>();
-                queue.Setup(x => x.Receive<PowerballDrawModel>()).Returns(new PowerballDrawModel()
+                var queue = mock.Mock<IQueue<PowerballDrawModel>>();
+                queue.Setup(x => x.Receive()).Returns(Task.FromResult(new PowerballDrawModel()
                 {
                     DrawNumber = 2,
                     DrawDateTime = drawTime,
                     DrawStatus = DrawStatusCode.Open,
                     DrawWinningNumbers = new List<int>()
-                });
+                }));
                 mock.Mock<IQueueProvider>()
                     .Setup(x => x.GetQueue<PowerballDrawModel>()).Returns(queue.Object);
 
@@ -73,14 +74,14 @@ namespace WebApp.API.Tests.Controllers
                     .Setup(x => x.GetStore(It.IsAny<int>())).Returns(cache.Object);
 
                 // Should return the queued results now
-                var queue = mock.Mock<IQueue>();
-                queue.Setup(x => x.Receive<PowerballDrawModel>()).Returns(new PowerballDrawModel()
+                var queue = mock.Mock<IQueue<PowerballDrawModel>>();
+                queue.Setup(x => x.Receive()).Returns(Task.FromResult(new PowerballDrawModel()
                 {
                     DrawNumber = 2,
                     DrawDateTime = drawTime,
                     DrawStatus = DrawStatusCode.Open,
                     DrawWinningNumbers = new List<int>()
-                });
+                }));
                 mock.Mock<IQueueProvider>()
                     .Setup(x => x.GetQueue<PowerballDrawModel>()).Returns(queue.Object);
 

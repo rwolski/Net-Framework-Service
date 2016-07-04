@@ -2,6 +2,8 @@
 {
     public interface IQueueProvider
     {
-        IQueue<T> GetQueue<T>(string queueName = null);
+        IQueue<T> GetQueue<T>(string queueName) where T : class;
+
+        IQueue<T> GetQueue<T>() where T : class;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using RabbitMQ.Client;
 using System;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Framework.Queue
 {
@@ -9,7 +10,7 @@ namespace Framework.Queue
         readonly IConnection _connection;
         readonly IModel _channel;
         protected readonly string _queueName;
-        
+
         #region Constructors
 
         public RabbitMQQueue(ConnectionFactory factory, string queueName)
@@ -33,42 +34,58 @@ namespace Framework.Queue
 
         #region Send
 
-        public virtual void Send(T message)
+        public virtual Task Send(T message)
         {
             var str = Newtonsoft.Json.JsonConvert.SerializeObject(message);
             var bytes = Encoding.UTF8.GetBytes(str);
 
             _channel.BasicPublish("", _queueName, null, bytes);
+
+            return Task.FromResult(true);
         }
 
-        public virtual void Publish(T message)
+        public virtual Task Publish(T message)
         {
             var str = Newtonsoft.Json.JsonConvert.SerializeObject(message);
             var bytes = Encoding.UTF8.GetBytes(str);
 
-            // Should send to all 
+            // Should send to all
             _channel.BasicPublish("", _queueName, null, bytes);
+
+            return Task.FromResult(true);
         }
 
         #endregion
 
         #region Receive
 
-        public virtual T Receive()
+        public virtual Task<T> Receive()
         {
             var result = _channel.BasicGet(_queueName, true);
             if (result == null)
-                return default(T);
+                return Task.FromResult(default(T));
 
             var jsonStr = Encoding.UTF8.GetString(result.Body);
             var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(jsonStr);
 
-            return obj;
+            return Task.FromResult(obj);
         }
 
-        public virtual void Consume()
+        public virtual Task<T> Consume()
         {
+            var result = _channel.BasicGet(_queueName, false);
+            if (result == null)
+                return Task.FromResult(default(T));
 
+            var jsonStr = Encoding.UTF8.GetString(result.Body);
+            var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(jsonStr);
+
+            return Task.FromResult(obj);
+        }
+
+        public virtual Task<IMessageResponse<T>> Request(IMessageRequest<T> request)
+        {
+            return null;
         }
 
         #endregion

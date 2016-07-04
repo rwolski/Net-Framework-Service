@@ -44,6 +44,10 @@
     <Reference Include="MassTransit.RabbitMqTransport">
       <HintPath>..\packages\MassTransit.RabbitMQ.3.3.5\lib\net452\MassTransit.RabbitMqTransport.dll</HintPath>
     </Reference>
+    <Reference Include="NewId, Version=2.1.3.0, Culture=neutral, PublicKeyToken=b8e0e9f2f1e657fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\NewId.2.1.3\lib\net45\NewId.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -61,8 +65,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IMessageRequest.cs" />
+    <Compile Include="IMessageResponse.cs" />
     <Compile Include="IQueue.cs" />
+    <Compile Include="IQueueMessage.cs" />
     <Compile Include="IServiceProviderSettings.cs" />
+    <Compile Include="MassTransitMessage.cs" />
     <Compile Include="MassTransitMessageConsumer.cs" />
     <Compile Include="MassTransitProvider.cs" />
     <Compile Include="IQueueProvider.cs" />

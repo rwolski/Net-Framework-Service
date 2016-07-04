@@ -23,10 +23,17 @@ namespace Framework.Queue
             };
         }
 
-        public IQueue<T> GetQueue<T>(string queueName = null)
+        public IQueue<T> GetQueue<T>(string queueName) where T : class
         {
             if (string.IsNullOrWhiteSpace(queueName))
-                queueName = GetQueueFromType<T>();
+                throw new ArgumentNullException("queueName");
+
+            return new RabbitMQQueue<T>(_client, queueName);
+        }
+
+        public IQueue<T> GetQueue<T>() where T : class
+        {
+            var queueName = GetQueueFromType<T>();
 
             return new RabbitMQQueue<T>(_client, queueName);
         }

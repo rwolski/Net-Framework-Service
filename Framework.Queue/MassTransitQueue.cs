@@ -1,15 +1,18 @@
 ﻿using MassTransit;
 using System;
+using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Framework.Queue
 {
-    internal class MassTransitQueue<T> : IQueue<T>, IDisposable
+    internal class MassTransitQueue<T> : IQueue<T>, IDisposable where T : class
     {
         readonly IBusControl _connection;
-        //readonly BusHandle _busHandle;
+        readonly IRequestClient<IMessageRequest<T>, IMessageResponse<T>> _requestClient;
+
         readonly IServiceProviderSettings _settings;
-        protected readonly string _queueName;
+        readonly string _queueName;
 
         #region Constructors
 
@@ -20,6 +23,8 @@ namespace Framework.Queue
             if (string.IsNullOrWhiteSpace(queueName))
                 throw new ArgumentNullException("queueName");
 
+            settings.Prefix = "rabbitmq";
+
             _connection = Bus.Factory.CreateUsingRabbitMq(cfg =>
             {
                 var host = cfg.Host(settings.BuildUri(), h =>
@@ -29,9 +34,20 @@ namespace Framework.Queue
                 });
 
                 cfg.UseJsonSerializer();
+                cfg.AutoDelete = false;
+
+                //cfg.Durable = true;
+
+                //cfg.ReceiveEndpoint(host, queueName, e => e.Consumer(typeof(IQueueMessage), type => new MassTransitMessage<T>()));
+
                 cfg.ReceiveEndpoint(host, queueName, e =>
-                    e.Consumer<MassTransitMessageConsumer<T>>());
+                {
+                    e.Durable = false;
+                    e.Consumer<MassTransitMessageConsumer>();
+                });
             });
+
+            //_requestClient = new MessageRequestClient<IMessageRequest<T>, IMessageResponse<T>>(_connection, settings.BuildUri(), TimeSpan.FromSeconds(30));
 
             _connection.Start();
 
@@ -43,36 +59,43 @@ namespace Framework.Queue
 
         #region Send
 
-        public async virtual void Send(T message)
+        public async virtual Task Send(T message)
         {
-            var endpoint = _connection.GetSendEndpoint(new Uri("rabbitmq://localhost/" + _queueName)).Result;
+            var endpoint = await _connection.GetSendEndpoint(new Uri("rabbitmq://localhost/" + _queueName));
             await endpoint.Send(message, message.GetType());
         }
 
-        public async virtual void Publish(T message)
+        public virtual Task Publish(T message)
         {
-            await _connection.Publish(message, message.GetType());
+            return _connection.Publish<T>(message);
+        }
+
+        public async Task<IMessageResponse<T>> Request(IMessageRequest<T> request = null)
+        {
+            if (request == null)
+                request = new QueueMessageRequest<T>();
+            return await _requestClient.Request(request);
         }
 
         #endregion
 
         #region Receive
 
-        public virtual T Receive()
+        public Task<T> Receive()
         {
             //_connection.ConnectHandler<T>()
-            Func<MassTransitMessageConsumer<T>> fn = () =>
-            {
-                return new MassTransitMessageConsumer<T>();
-            };
-            var handle = _connection.ConnectConsumer(fn);
+            //Func<MassTransitMessageConsumer<T>> fn = () =>
+            //{
+            //    return new MassTransitMessageConsumer<T>();
+            //};
+            //var handle = _connection.ConnectConsumer(fn);
 
-            return default(T);
+            return Task.FromResult(default(T));
         }
 
-        public virtual void Consume()
+        public Task<T> Consume()
         {
-
+            return Task.FromResult(default(T));
         }
 
         #endregion
@@ -96,8 +119,6 @@ namespace Framework.Queue
             {
                 _connection.Stop();
             }
-            //_channel.Dispose();
-            //_connection.Dispose();
         }
 
         #endregion

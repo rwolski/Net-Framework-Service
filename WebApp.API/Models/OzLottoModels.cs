@@ -45,16 +45,14 @@ namespace WebApp.API.Models
         /// <summary>
         /// The draw date time
         /// </summary>
-        [IndexField(Sequence = 1)]
-        [EntityField("draw_date_time")]
+        [IndexField("draw_date_time", Sequence = 1)]
         [JsonProperty("draw_date_time")]
         public DateTime DrawDateTime { get; set; }
 
         /// <summary>
         /// The draw number
         /// </summary>
-        [IndexField(Sequence = 2)]
-        [EntityField("draw_number")]
+        [IndexField("draw_number", Sequence = 2)]
         [JsonProperty("draw_number")]
         public int DrawNumber { get; set; }
 

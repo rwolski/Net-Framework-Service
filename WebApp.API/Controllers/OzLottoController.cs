@@ -61,7 +61,7 @@ namespace WebApp.API.Controllers
 
             using (var q = _queueProvider.GetQueue<OzLottoDrawModel>())
             {
-                drawModel = q.Receive<OzLottoDrawModel>();
+                drawModel = q.Receive().Result;
                 if (drawModel != null)
                     store.Save(drawModel);
 

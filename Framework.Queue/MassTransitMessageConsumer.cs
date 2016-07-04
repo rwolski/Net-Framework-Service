@@ -3,12 +3,15 @@ using System.Threading.Tasks;
 
 namespace Framework.Queue
 {
-    public class MassTransitMessageConsumer<T> : IConsumer
+    public class MassTransitMessageConsumer : IConsumer<IQueueMessage>
     {
-        public T message { get; set; }
+        IQueueMessage _message { get; set; }
 
-        public Task Consume(ConsumeContext<MassTransitMessageConsumer<T>> context)
+        public Task Consume(ConsumeContext<IQueueMessage> context)
         {
+            _message = context.Message;
+            _message.PerformAction();
+
             return Task.FromResult(0);
         }
     }

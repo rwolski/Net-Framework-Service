@@ -4,10 +4,11 @@ namespace Framework
 {
     public interface IServiceProviderSettings
     {
-        string Hostname { get; }
-        int Port { get; }
-        string Username { get; }
-        string Password { get; }
+        string Hostname { get; set; }
+        int Port { get; set; }
+        string Username { get; set; }
+        string Password { get; set; }
+        string Prefix { get; set; }
 
         Uri BuildUri();
     }

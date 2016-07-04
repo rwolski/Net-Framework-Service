@@ -12,6 +12,8 @@ namespace Framework
 
         public string Password { get; set; }
 
+        public string Prefix { get; set; }
+
 
         public ServiceProviderSettings()
         {
@@ -21,7 +23,7 @@ namespace Framework
         {
             if (string.IsNullOrWhiteSpace(hostname))
                 throw new ArgumentNullException("hostname");
-            
+
             Hostname = hostname;
             Port = port;
         }
@@ -30,6 +32,7 @@ namespace Framework
         {
             var uri = new UriBuilder(Hostname)
             {
+                Scheme = Prefix,
                 Port = Port
             };
 
@@ -40,5 +43,11 @@ namespace Framework
 
             return uri.Uri;
         }
+    }
+
+    public enum QueueProviderType
+    {
+        RabbitMQ,
+        MassTransit
     }
 }
