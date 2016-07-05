@@ -11,8 +11,8 @@ namespace Framework.Tests
         protected override void Load(ContainerBuilder builder)
         {
             builder.Register(c => new RedisProvider(AppSettings.RedisHostname, AppSettings.RedisPort)).As<ICacheProvider>().SingleInstance();
-            builder.Register(c => new RabbitMQProvider(AppSettings.RabbitMQHostname, AppSettings.RabbitMQPort)).As<IQueueProvider>().Keyed<IQueueProvider>(QueueProviderType.RabbitMQ).SingleInstance();
-            builder.Register(c => new MassTransitProvider(AppSettings.RabbitMQHostname, (UInt16)AppSettings.RabbitMQPort)).As<IQueueProvider>().Keyed<IQueueProvider>(QueueProviderType.MassTransit).SingleInstance();
+            builder.Register(c => new RabbitMQProvider(AppSettings.RabbitMQHostname, AppSettings.RabbitMQPort)).As<ISimpleQueueProvider>().SingleInstance();
+            builder.Register(c => new ServiceBusProvider(c.Resolve<ILifetimeScope>(), AppSettings.RabbitMQHostname, (UInt16)AppSettings.RabbitMQPort)).As<IServiceBusProvider>().SingleInstance();
             builder.Register(c => new MongoDatabaseProvider(AppSettings.MongoDbHostname, AppSettings.MongoDbPort)).As<IDatabaseProvider>().SingleInstance();
         }
     }

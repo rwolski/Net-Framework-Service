@@ -31,7 +31,7 @@ namespace Framework.Tests
                 TestField = 2
             };
 
-            var provider = Container.ResolveKeyed<ISimpleQueueProvider>(QueueProviderType.RabbitMQ);
+            var provider = Container.Resolve<ISimpleQueueProvider>();
             var store = provider.GetQueue<QueueTestEntity>(_queue);
 
             await store.Send(entity);

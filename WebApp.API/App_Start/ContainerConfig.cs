@@ -28,7 +28,7 @@ namespace WebApp.API
             var mongoProvider = new MongoDatabaseProvider(AppSettings.MongoDbHostname, AppSettings.MongoDbPort, AppSettings.MongoDbDatabase);
 
             builder.Register(c => new RedisProvider(AppSettings.RedisHostname, AppSettings.RedisPort)).As<ICacheProvider>().SingleInstance();
-            builder.Register(c => new RabbitMQProvider(AppSettings.RabbitMQHostname, AppSettings.RabbitMQPort)).As<IQueueProvider>().SingleInstance();
+            builder.Register(c => new RabbitMQProvider(AppSettings.RabbitMQHostname, AppSettings.RabbitMQPort)).As<ISimpleQueueProvider>().SingleInstance();
             builder.Register(c => mongoProvider).As<IDatabaseProvider>().SingleInstance();
             builder.Register(c => mongoProvider.GetDatabase()).As<IDatabaseConnection>().InstancePerRequest();
 

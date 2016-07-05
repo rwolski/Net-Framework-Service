@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Framework
+namespace Framework.Core
 {
     public class ServiceProviderSettings : IServiceProviderSettings
     {
@@ -12,7 +12,7 @@ namespace Framework
 
         public string Password { get; set; }
 
-        public string Prefix { get; set; }
+        public string Protocol { get; set; }
 
 
         public ServiceProviderSettings()
@@ -28,12 +28,13 @@ namespace Framework
             Port = port;
         }
 
-        public Uri BuildUri()
+        public Uri BuildUri(string path = null)
         {
             var uri = new UriBuilder(Hostname)
             {
-                Scheme = Prefix,
-                Port = Port
+                Scheme = Protocol,
+                Port = Port,
+                Path = path ?? "/"
             };
 
             if (string.IsNullOrWhiteSpace(Username))

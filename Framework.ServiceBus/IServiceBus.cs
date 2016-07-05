@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Framework.Queue
 {
-    public interface IServiceBus<T> : IDisposable
+    public interface IServiceBus<T> : IDisposable where T : class
     {
         Task Send(T message);
 

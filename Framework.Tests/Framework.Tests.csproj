@@ -57,16 +57,20 @@
   <ItemGroup>
     <Compile Include="AppSettings.cs" />
     <Compile Include="FrameworkUnitTest.cs" />
-    <Compile Include="QueueTests.cs" />
     <Compile Include="MongoTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RedisTests.cs" />
+    <Compile Include="SimpleQueueTests.cs" />
     <Compile Include="TestModules.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Framework.Cache\Framework.Cache.csproj">
       <Project>{3854f9dd-bbd2-4e7e-8eec-58f2e7df33f9}</Project>
       <Name>Framework.Cache</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Framework.Core\Framework.Core.csproj">
+      <Project>{99104898-a486-42e0-beca-6cf3542631d3}</Project>
+      <Name>Framework.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Framework.Data\Framework.Data.csproj">
       <Project>{e82ac2f5-b4dd-4c42-8854-952bca78d334}</Project>
@@ -75,6 +79,14 @@
     <ProjectReference Include="..\Framework.Queue\Framework.Queue.csproj">
       <Project>{04216074-028e-4d39-ae79-3369ae2bbdbf}</Project>
       <Name>Framework.Queue</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Framework.ServiceBus\Framework.ServiceBus.csproj">
+      <Project>{5ef380dc-66da-4b54-9613-2ead8b2d9077}</Project>
+      <Name>Framework.ServiceBus</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Framework.WebSockets\Framework.WebSockets.csproj">
+      <Project>{5e069392-ed61-4b32-965b-ee8a20abfd1c}</Project>
+      <Name>Framework.WebSockets</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

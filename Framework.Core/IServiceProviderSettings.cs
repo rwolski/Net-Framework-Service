@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Framework
+namespace Framework.Core
 {
     public interface IServiceProviderSettings
     {
@@ -8,8 +8,8 @@ namespace Framework
         int Port { get; set; }
         string Username { get; set; }
         string Password { get; set; }
-        string Prefix { get; set; }
+        string Protocol { get; set; }
 
-        Uri BuildUri();
+        Uri BuildUri(string path = null);
     }
 }

@@ -1,11 +1,12 @@
 ﻿using Autofac;
+using Framework.Core;
 using MassTransit;
 using System;
 using System.Threading.Tasks;
 
 namespace Framework.Queue
 {
-    internal class ServiceBus<T> : IServiceBus<T>, IDisposable, IComponentContext where T : class, IQueueMessage
+    internal class ServiceBus<T> : IServiceBus<T> where T : class, IQueueMessage<T>
     {
         readonly IBusControl _connection;
 
@@ -14,18 +15,19 @@ namespace Framework.Queue
 
         #region Constructors
 
-        public ServiceBus(IContainer container, IServiceProviderSettings settings, string queueName)
+        public ServiceBus(ILifetimeScope container, IServiceProviderSettings settings, string queueName)
         {
             if (settings == null)
                 throw new ArgumentNullException("settings");
             if (string.IsNullOrWhiteSpace(queueName))
                 throw new ArgumentNullException("queueName");
 
-            settings.Prefix = "rabbitmq";
+            settings.Protocol = "rabbitmq";
 
             _connection = Bus.Factory.CreateUsingRabbitMq(cfg =>
             {
-                var host = cfg.Host(settings.BuildUri(),  h =>
+                var uri = settings.BuildUri();
+                var host = cfg.Host(uri,  h =>
                 {
                     h.Username(settings.Username);
                     h.Password(settings.Password);
@@ -33,8 +35,9 @@ namespace Framework.Queue
 
                 cfg.ReceiveEndpoint(host, queueName, e =>
                 {
-                    e.LoadFrom(container);
+                    //e.LoadFrom(container);
                     //e.Consumer(() => container.Resolve<IConsumerFactory<T>>());
+                    e.Consumer<MessageConsumer<T>>();
                 });
             });
 
@@ -50,7 +53,8 @@ namespace Framework.Queue
 
         public async virtual Task Send(T message)
         {
-            var endpoint = await _connection.GetSendEndpoint(new Uri("rabbitmq://localhost:5672/" + _queueName));
+            var uri = _settings.BuildUri(_queueName + "/");
+            var endpoint = await _connection.GetSendEndpoint(uri);
             await endpoint.Send<T>(message);
         }
 

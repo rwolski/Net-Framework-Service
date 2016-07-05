@@ -24,6 +24,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		TODO.txt = TODO.txt
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework.ServiceBus", "Framework.ServiceBus\Framework.ServiceBus.csproj", "{5EF380DC-66DA-4B54-9613-2EAD8B2D9077}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework.Core", "Framework.Core\Framework.Core.csproj", "{99104898-A486-42E0-BECA-6CF3542631D3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +66,14 @@ Global
 		{5E069392-ED61-4B32-965B-EE8A20ABFD1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E069392-ED61-4B32-965B-EE8A20ABFD1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E069392-ED61-4B32-965B-EE8A20ABFD1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EF380DC-66DA-4B54-9613-2EAD8B2D9077}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EF380DC-66DA-4B54-9613-2EAD8B2D9077}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EF380DC-66DA-4B54-9613-2EAD8B2D9077}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EF380DC-66DA-4B54-9613-2EAD8B2D9077}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99104898-A486-42E0-BECA-6CF3542631D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99104898-A486-42E0-BECA-6CF3542631D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99104898-A486-42E0-BECA-6CF3542631D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99104898-A486-42E0-BECA-6CF3542631D3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
