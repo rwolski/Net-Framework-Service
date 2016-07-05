@@ -40,33 +40,35 @@ namespace WebApp.API.Controllers
         /// <returns></returns>
         public OzLottoDrawModel Get()
         {
-            var store = _dataConnection.GetCollection<OzLottoDrawModel>();
+            //var store = _dataConnection.GetCollection<OzLottoDrawModel>();
 
-            // Get the last closed draw
-            var drawModel = store.FindFirstOrDefault(
-                new WhereCondition<OzLottoDrawModel>(x => x.DrawStatus == DrawStatusCode.Closed),
-                new List<OrderBy<OzLottoDrawModel>>()
-                {
-                    new OrderBy<OzLottoDrawModel>()
-                    {
-                        Exp = x => x.DrawNumber,
-                        Ascending = false
-                    }
-                });
+            //// Get the last closed draw
+            //var drawModel = store.FindFirstOrDefault(
+            //    new WhereCondition<OzLottoDrawModel>(x => x.DrawStatus == DrawStatusCode.Closed),
+            //    new List<OrderBy<OzLottoDrawModel>>()
+            //    {
+            //        new OrderBy<OzLottoDrawModel>()
+            //        {
+            //            Exp = x => x.DrawNumber,
+            //            Ascending = false
+            //        }
+            //    });
 
-            if (drawModel != null)
-            {
-                return drawModel;
-            }
+            //if (drawModel != null)
+            //{
+            //    return drawModel;
+            //}
 
-            using (var q = _queueProvider.GetQueue<OzLottoDrawModel>())
-            {
-                drawModel = q.Receive().Result;
-                if (drawModel != null)
-                    store.Save(drawModel);
+            //using (var q = _queueProvider.GetQueue<OzLottoDrawModel>())
+            //{
+            //    drawModel = q.Receive().Result;
+            //    if (drawModel != null)
+            //        store.Save(drawModel);
 
-                return drawModel;
-            }
+            //    return drawModel;
+            //}
+
+            return new OzLottoDrawModel();
         }
     }
 }

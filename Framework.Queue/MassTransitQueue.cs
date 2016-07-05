@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Framework.Queue
 {
-    internal class MassTransitQueue<T> : IQueue<T>, IDisposable where T : class
+    internal class MassTransitQueue<T> : IQueue<T>, IDisposable where T : class, IQueueMessage
     {
         readonly IBusControl _connection;
         readonly IRequestClient<IMessageRequest<T>, IMessageResponse<T>> _requestClient;
@@ -27,27 +27,31 @@ namespace Framework.Queue
 
             _connection = Bus.Factory.CreateUsingRabbitMq(cfg =>
             {
-                var host = cfg.Host(settings.BuildUri(), h =>
+                var host = cfg.Host(settings.BuildUri(),  h => //{ });
                 {
                     h.Username(settings.Username);
                     h.Password(settings.Password);
                 });
 
-                cfg.UseJsonSerializer();
-                cfg.AutoDelete = false;
+                //cfg.UseJsonSerializer();
+                //cfg.AutoDelete = false;
 
                 //cfg.Durable = true;
 
                 //cfg.ReceiveEndpoint(host, queueName, e => e.Consumer(typeof(IQueueMessage), type => new MassTransitMessage<T>()));
 
+                /*cfg.ReceiveEndpoint(host, queueName, e =>
+                {
+                    e.Consumer<MassTransitMessageConsumer>();
+                });*/
+
                 cfg.ReceiveEndpoint(host, queueName, e =>
                 {
-                    e.Durable = false;
-                    e.Consumer<MassTransitMessageConsumer>();
+                    e.Consumer<MassTransitMessageConsumer<T>>();
                 });
             });
 
-            //_requestClient = new MessageRequestClient<IMessageRequest<T>, IMessageResponse<T>>(_connection, settings.BuildUri(), TimeSpan.FromSeconds(30));
+            //_requestClient = new MessageRequestClient<IMessageRequest<T>, IMessageResponse<T>>(_connection, new Uri("rabbitmq://localhost:5672/" + _queueName), TimeSpan.FromSeconds(30));
 
             _connection.Start();
 
@@ -61,8 +65,16 @@ namespace Framework.Queue
 
         public async virtual Task Send(T message)
         {
-            var endpoint = await _connection.GetSendEndpoint(new Uri("rabbitmq://localhost/" + _queueName));
-            await endpoint.Send(message, message.GetType());
+            var endpoint = await _connection.GetSendEndpoint(new Uri("rabbitmq://localhost:5672/" + _queueName));
+            try
+            {
+                await endpoint.Send<T>(message);
+            }
+            catch (Exception e )
+            {
+                var i = 3;
+
+            }
         }
 
         public virtual Task Publish(T message)

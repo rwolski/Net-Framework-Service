@@ -39,22 +39,24 @@ namespace WebApp.API.Controllers
         /// <returns></returns>
         public PowerballDrawModel Get()
         {
-            var store = _cacheProvider.GetStore(AppSettings.RedisDatabaseIndex);
-            var drawModel = store.GetObject<PowerballDrawModel>();
+            //var store = _cacheProvider.GetStore(AppSettings.RedisDatabaseIndex);
+            //var drawModel = store.GetObject<PowerballDrawModel>();
 
-            if (drawModel != null)
-            {
-                return drawModel;
-            }
+            //if (drawModel != null)
+            //{
+            //    return drawModel;
+            //}
 
-            using (var q = _queueProvider.GetQueue<PowerballDrawModel>())
-            {
-                drawModel = q.Receive().Result;
-                if (drawModel != null)
-                    store.SetObject(drawModel);
+            //using (var q = _queueProvider.GetQueue<PowerballDrawModel>())
+            //{
+            //    drawModel = q.Receive().Result;
+            //    if (drawModel != null)
+            //        store.SetObject(drawModel);
 
-                return drawModel;
-            }
+            //    return drawModel;
+            //}
+
+            return new PowerballDrawModel();
         }
     }
 }

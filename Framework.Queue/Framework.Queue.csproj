@@ -70,7 +70,7 @@
     <Compile Include="IQueue.cs" />
     <Compile Include="IQueueMessage.cs" />
     <Compile Include="IServiceProviderSettings.cs" />
-    <Compile Include="MassTransitMessage.cs" />
+    <Compile Include="QueueMessage.cs" />
     <Compile Include="MassTransitMessageConsumer.cs" />
     <Compile Include="MassTransitProvider.cs" />
     <Compile Include="IQueueProvider.cs" />
