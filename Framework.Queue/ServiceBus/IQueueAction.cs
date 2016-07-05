@@ -1,6 +1,6 @@
 ﻿namespace Framework.Queue
 {
-    public interface IQueueMessage
+    public interface IQueueAction
     {
         void PerformAction();
     }

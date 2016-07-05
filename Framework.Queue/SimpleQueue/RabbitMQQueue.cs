@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Framework.Queue
 {
-    internal class RabbitMQQueue<T> : IQueue<T>
+    internal class RabbitMQQueue<T> : ISimpleQueue<T>
     {
         readonly IConnection _connection;
         readonly IModel _channel;
@@ -50,7 +50,7 @@ namespace Framework.Queue
             var bytes = Encoding.UTF8.GetBytes(str);
 
             // Should send to all
-            _channel.BasicPublish("", _queueName, null, bytes);
+            _channel.BasicPublish(_queueName, _queueName, null, bytes);
 
             return Task.FromResult(true);
         }
@@ -81,11 +81,6 @@ namespace Framework.Queue
             var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(jsonStr);
 
             return Task.FromResult(obj);
-        }
-
-        public virtual Task<IMessageResponse<T>> Request(IMessageRequest<T> request)
-        {
-            return null;
         }
 
         #endregion

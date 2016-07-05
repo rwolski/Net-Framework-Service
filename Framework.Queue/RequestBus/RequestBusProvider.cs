@@ -1,41 +1,40 @@
-﻿using RabbitMQ.Client;
+﻿using MassTransit;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Framework.Queue
 {
-    public sealed class RabbitMQProvider : IQueueProvider
+    public class RequestBusProvider : IRequestBusProvider
     {
-        readonly ConnectionFactory _client;
+        readonly IServiceProviderSettings _settings;
 
 
-        public RabbitMQProvider(string hostname = "localhost", int port = 5672)
+        public RequestBusProvider(string hostname = "localhost", UInt16 port = 5672, string username = "guest", string password = "guest")
         {
             if (string.IsNullOrWhiteSpace(hostname))
                 throw new ArgumentNullException("hostname");
             if (port <= 0)
                 throw new ArgumentOutOfRangeException("port");
 
-            _client = new ConnectionFactory()
-            {
-                HostName = hostname,
-                Port = port
-            };
+            _settings = new ServiceProviderSettings(hostname, port);
         }
 
-        public IQueue<T> GetQueue<T>(string queueName) where T : class, IQueueMessage
+        public IRequestBus<T> GetQueue<T>(string queueName) where T : class
         {
             if (string.IsNullOrWhiteSpace(queueName))
                 throw new ArgumentNullException("queueName");
 
-            return new RabbitMQQueue<T>(_client, queueName);
+            return new RequestBus<T>(_settings, queueName);
         }
 
-        public IQueue<T> GetQueue<T>() where T : class, IQueueMessage
+        public IRequestBus<T> GetQueue<T>() where T : class
         {
             var queueName = GetQueueFromType<T>();
 
-            return new RabbitMQQueue<T>(_client, queueName);
+            return new RequestBus<T>(_settings, queueName);
         }
 
         private string GetQueueFromType<T>()

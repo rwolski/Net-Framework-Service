@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Framework.Queue
 {
-    public interface IQueue<T> : IDisposable
+    public interface ISimpleQueue<T> : IDisposable
     {
         Task Send(T message);
 
@@ -12,7 +12,5 @@ namespace Framework.Queue
         Task<T> Receive();
 
         Task<T> Consume();
-
-        Task<IMessageResponse<T>> Request(IMessageRequest<T> request = null);
     }
 }
