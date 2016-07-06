@@ -1,9 +1,14 @@
-﻿namespace Framework.ServiceBus
+﻿using Autofac;
+using System.Threading.Tasks;
+
+namespace Framework.ServiceBus
 {
     public interface IServiceData
     {
-        int Val { get; set; }
+        //int Val { get; set; }
 
-        //void Action();
+        ILifetimeScope Scope { get; set; }
+
+        Task Action();
     }
 }

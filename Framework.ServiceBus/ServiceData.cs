@@ -1,12 +1,18 @@
-﻿namespace Framework.ServiceBus
-{
-    public class ServiceData : IServiceData
-    {
-        public int Val { get; set; }
+﻿using Autofac;
+using System.Threading.Tasks;
 
-        public virtual void Action()
+namespace Framework.ServiceBus
+{
+    public abstract class ServiceData : IServiceData
+    {
+        //public int Val { get; set; }
+
+        public ILifetimeScope Scope { get; set; }
+
+        protected ServiceData()
         {
-            var i = 3;
         }
+
+        public abstract Task Action();
     }
 }

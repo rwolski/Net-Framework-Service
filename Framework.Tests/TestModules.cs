@@ -12,19 +12,13 @@ namespace Framework.Tests
     {
         protected override void Load(ContainerBuilder builder)
         {
-            //builder.RegisterType<ServiceBusTests.TestData>().As<IServiceData>().InstancePerLifetimeScope();
-            builder.RegisterType<MessageConsumer<ServiceBusTests.TestData>>();
-            //builder.RegisterModule<ServiceBusModule>();
+            //builder.RegisterType<ServiceBusTests.TestData1>().As<IServiceData>().InstancePerLifetimeScope();
+            //builder.RegisterType<MessageConsumer<ServiceBusTests.TestData1>>().InstancePerLifetimeScope().AsSelf();
+            //builder.RegisterType<MessageConsumer<ServiceBusTests.TestData2>>().InstancePerLifetimeScope().AsSelf();
+            builder.RegisterModule<ServiceBusModule>();
 
-            //var types = AppDomain.CurrentDomain.GetAssemblies()
-            //    .SelectMany(s => s.GetTypes())
-            //    .Where(p => typeof(IServiceData).IsAssignableFrom(p));
             //builder.RegisterGeneric(typeof(MessageConsumer<>))
-            //    .As
-            //foreach (var type in types)
-            //{
-            //    builder.RegisterType<<type>>();
-            //}
+              //  .As(typeof(IConsumer<>));
 
             //builder.RegisterType<ServiceBusTests.TestAction>().As <IServiceAction<IServiceData>>();
             builder.Register(c => new RedisProvider(AppSettings.RedisHostname, AppSettings.RedisPort)).As<ICacheProvider>().SingleInstance();

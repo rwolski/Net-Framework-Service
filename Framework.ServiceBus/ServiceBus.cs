@@ -2,6 +2,7 @@
 using Framework.Core;
 using MassTransit;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Framework.ServiceBus
@@ -33,20 +34,25 @@ namespace Framework.ServiceBus
                     h.Password(settings.Password);
                 });
 
-                //var a = new MessageConsumer<TAction>();
-
-                cfg.AutoDelete = true;
-
-                //var factory = new MyConsumerFactory<MessageConsumer>();
-
                 cfg.ReceiveEndpoint(host, queueName, e =>
                 {
                     e.LoadFrom(container);
                     //e.Consumer(factory);
-                    e.AutoDelete = true;
-                    //e.Consumer(() => container.Resolve<IConsumerFactory<T>>());
-                    //e.Consumer(typeof(T), type => new ServiceAction<T>());
-                    //e.Consumer<MessageConsumer<TAction>>();
+
+                    //var consumerTypes = container.ComponentRegistry.Registrations
+                    //    .Where(r => typeof(ServiceData).IsAssignableFrom(r.Activator.LimitType))
+                    //    .Select(r => r.Activator.LimitType)
+                    //    .Where(r => !r.IsAbstract);
+                    
+                    //foreach (var type in consumerTypes)
+                    //{
+                    //    var c = container.Resolve(typeof(MessageConsumer<>).MakeGenericType(type));
+                    //    e.Consumer(c.GetType(), (t) => container.Resolve(typeof(MessageConsumer<>).MakeGenericType(type)));
+
+                    //    //e.Consumer(c.GetType(), (t) => container.Resolve(typeof(MessageConsumer<>).MakeGenericType(t)));
+
+                    //    //e.Consumer(consumer,  (t) => { return container.Resolve(t); });
+                    //}
                 });
             });
 

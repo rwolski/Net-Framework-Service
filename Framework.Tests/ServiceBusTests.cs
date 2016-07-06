@@ -8,90 +8,64 @@ namespace Framework.Tests
     [TestClass]
     public sealed class ServiceBusTests : FrameworkUnitTest
     {
-        public class TestData : IServiceData
+        static int _test1Action = 0;
+        static string _test2Action = null;
+
+        public class TestData1 : ServiceData
         {
             public int Val { get; set; }
 
-            public TestData()
+            public override Task Action()
             {
-                var i = 3;
-            }
-            //public int Val { get; set; }
-
-            public void Action()
-            {
-                var i = 3;
+                _test1Action = Val;
+                return Task.FromResult(0);
             }
         }
 
-        //public class TestData2 : IServiceData
-        //{
-        //    public int Val { get; set; }
+        public class TestData2 : ServiceData
+        {
+            public string Val { get; set; }
 
-        //    public void Action()
-        //    {
-        //        var i = 3;
-        //    }
-        //}
-
-        //public class TestMessage : QueueMessage<TestData>
-        //{
-        //    public TestMessage(ILifetimeScope scope)
-        //        : base(scope)
-        //    {
-        //    }
-        //}
-
-        //public class TestAction : IServiceAction<IServiceData>
-        //{
-        //    public IServiceData Data { get; set; }
-
-        //    public void PerformAction()
-        //    {
-        //        int i = 3;
-        //    }
-        //}
+            public override Task Action()
+            {
+                _test2Action = Val;
+                return Task.FromResult(0);
+            }
+        }
 
         [TestMethod]
         [TestCategory("QueueTests")]
         public async Task MassTransitLifecycleTest()
         {
-            const string _queue = "TestEntity2";
+            _test1Action = 0;
+            _test2Action = null;
 
-            //using (var scope = Container.BeginLifetimeScope(builder =>
-            //    {
-            //        builder.RegisterType<TestData>().As<IServiceData>();
-            //        builder.RegisterType<TestAction>().As<IServiceAction<IServiceData>>();
-            //    }))
-            //{
-                var entity = new TestData()
-                {
-                    Val = 2
-                };
-                //var entity2 = new TestData2()
-                //{
-                //    Val = 2
-                //};
+            const string queue = "MassTransitPublishTest";
+
+            var entity1 = new TestData1()
+            {
+                Val = 2
+            };
+            var entity2 = new TestData2()
+            {
+                Val = "blah"
+            };
 
             var provider = Container.Resolve<IServiceBusProvider>();
-            var store = provider.GetBus(_queue);
+            var store = provider.GetBus(queue);
 
-            //var provider1 = Container.ResolveKeyed<IQueueProvider>(QueueProviderType.RabbitMQ);
-            //var store1 = provider.GetQueue<QueueTestMessage>(_queue);
+            await store.Publish(entity1);
+            await store.Publish(entity2);
 
-            //await store.Send(entity);
+            int counter = 0;
+            while ((_test1Action == 0 || _test2Action == null) && counter < 5)
+            {
+                System.Threading.Thread.Sleep(500);
+                counter++;
+            }
 
-            await store.Publish(entity);
-            //await store.Publish(entity2);
-
-            System.Threading.Thread.Sleep(1000);
-
-            //var result = store.Request();
-            //var result = store.Request().Result;
-            //Assert.IsNotNull(result);
-            //Assert.IsNotNull(result.Body);
-            //Assert.AreEqual(2, result.Body.TestField);
-            //}
+            Assert.AreEqual(2, _test1Action);
+            Assert.AreEqual("blah", _test2Action);
         }
     }
 }
