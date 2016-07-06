@@ -3,10 +3,8 @@ using System.Threading.Tasks;
 
 namespace Framework.ServiceBus
 {
-    public interface IServiceData
+    public interface IServiceEvent
     {
-        //int Val { get; set; }
-
         ILifetimeScope Scope { get; set; }
 
         Task Action();

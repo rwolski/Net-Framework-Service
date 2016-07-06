@@ -60,7 +60,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HubClient.cs" />
     <Compile Include="HubHost.cs" />
+    <Compile Include="IHubClient.cs" />
     <Compile Include="IHubHost.cs" />
     <Compile Include="SignalRErrorHandling.cs" />
     <Compile Include="SignalRHub.cs" />

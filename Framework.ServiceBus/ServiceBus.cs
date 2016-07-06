@@ -37,22 +37,6 @@ namespace Framework.ServiceBus
                 cfg.ReceiveEndpoint(host, queueName, e =>
                 {
                     e.LoadFrom(container);
-                    //e.Consumer(factory);
-
-                    //var consumerTypes = container.ComponentRegistry.Registrations
-                    //    .Where(r => typeof(ServiceData).IsAssignableFrom(r.Activator.LimitType))
-                    //    .Select(r => r.Activator.LimitType)
-                    //    .Where(r => !r.IsAbstract);
-                    
-                    //foreach (var type in consumerTypes)
-                    //{
-                    //    var c = container.Resolve(typeof(MessageConsumer<>).MakeGenericType(type));
-                    //    e.Consumer(c.GetType(), (t) => container.Resolve(typeof(MessageConsumer<>).MakeGenericType(type)));
-
-                    //    //e.Consumer(c.GetType(), (t) => container.Resolve(typeof(MessageConsumer<>).MakeGenericType(t)));
-
-                    //    //e.Consumer(consumer,  (t) => { return container.Resolve(t); });
-                    //}
                 });
             });
 

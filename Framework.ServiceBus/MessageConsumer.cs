@@ -38,7 +38,7 @@ namespace Framework.ServiceBus
         }
     }
 
-    public class MessageConsumer<T> : IConsumer<T> where T : class, IServiceData
+    public class MessageConsumer<T> : IConsumer<T> where T : class, IServiceEvent
     {
         ILifetimeScope _scope;
 
