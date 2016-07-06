@@ -1,4 +1,4 @@
-﻿namespace Framework.Queue
+﻿namespace Framework.ServiceBus
 {
     public class QueueAction<T> : IQueueAction<T>
     {

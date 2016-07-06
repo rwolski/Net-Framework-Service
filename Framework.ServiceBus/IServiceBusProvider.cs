@@ -1,8 +1,8 @@
-﻿namespace Framework.Queue
+﻿namespace Framework.ServiceBus
 {
     public interface IServiceBusProvider
     {
-        IServiceBus<T> GetBus<T>(string queueName) where T : class, IQueueMessage<T>;
+        IServiceBus GetBus(string queueName);
 
         //IServiceBus<T> GetBus<T>() where T : class;
     }

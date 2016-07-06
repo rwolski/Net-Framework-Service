@@ -76,6 +76,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ServiceData.cs" />
+    <Compile Include="IServiceData.cs" />
+    <Compile Include="ServiceBusModule.cs" />
+    <Compile Include="ServiceAction.cs" />
+    <Compile Include="IServiceAction.cs" />
     <Compile Include="IQueueAction.cs" />
     <Compile Include="IQueueMessage.cs" />
     <Compile Include="IServiceBus.cs" />

@@ -60,6 +60,7 @@
     <Compile Include="MongoTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RedisTests.cs" />
+    <Compile Include="ServiceBusTests.cs" />
     <Compile Include="SimpleQueueTests.cs" />
     <Compile Include="TestModules.cs" />
   </ItemGroup>

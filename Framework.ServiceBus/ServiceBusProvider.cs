@@ -2,7 +2,7 @@
 using Framework.Core;
 using System;
 
-namespace Framework.Queue
+namespace Framework.ServiceBus
 {
     public class ServiceBusProvider : IServiceBusProvider
     {
@@ -21,12 +21,12 @@ namespace Framework.Queue
             _scope = scope;
         }
 
-        public IServiceBus<T> GetBus<T>(string queueName) where T : class, IQueueMessage<T>
+        public IServiceBus GetBus(string queueName)
         {
             if (string.IsNullOrWhiteSpace(queueName))
                 throw new ArgumentNullException("queueName");
 
-            return new ServiceBus<T>(_scope, _settings, queueName);
+            return new ServiceBus(_scope, _settings, queueName);
         }
 
         //public IServiceBus<T> GetQueue<T>() where T : class

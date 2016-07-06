@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Framework.Queue
+namespace Framework.ServiceBus
 {
-    public interface IServiceBus<T> : IDisposable where T : class
+    public interface IServiceBus : IDisposable
     {
-        Task Send(T message);
+        Task Send<TData>(TData message) where TData : class;
 
-        Task Publish(T message);
+        Task Publish<TData>(TData message) where TData : class;
 
     }
 }

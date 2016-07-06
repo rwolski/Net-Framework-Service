@@ -4,9 +4,9 @@ using MassTransit;
 using System;
 using System.Threading.Tasks;
 
-namespace Framework.Queue
+namespace Framework.ServiceBus
 {
-    internal class ServiceBus<T> : IServiceBus<T> where T : class, IQueueMessage<T>
+    internal class ServiceBus : IServiceBus
     {
         readonly IBusControl _connection;
 
@@ -33,11 +33,20 @@ namespace Framework.Queue
                     h.Password(settings.Password);
                 });
 
+                //var a = new MessageConsumer<TAction>();
+
+                cfg.AutoDelete = true;
+
+                //var factory = new MyConsumerFactory<MessageConsumer>();
+
                 cfg.ReceiveEndpoint(host, queueName, e =>
                 {
-                    //e.LoadFrom(container);
+                    e.LoadFrom(container);
+                    //e.Consumer(factory);
+                    e.AutoDelete = true;
                     //e.Consumer(() => container.Resolve<IConsumerFactory<T>>());
-                    e.Consumer<MessageConsumer<T>>();
+                    //e.Consumer(typeof(T), type => new ServiceAction<T>());
+                    //e.Consumer<MessageConsumer<TAction>>();
                 });
             });
 
@@ -51,16 +60,16 @@ namespace Framework.Queue
 
         #region Send
 
-        public async virtual Task Send(T message)
+        public async virtual Task Send<TData>(TData message) where TData : class
         {
             var uri = _settings.BuildUri(_queueName + "/");
             var endpoint = await _connection.GetSendEndpoint(uri);
-            await endpoint.Send<T>(message);
+            await endpoint.Send<TData>(message);
         }
 
-        public virtual Task Publish(T message)
+        public virtual Task Publish<TData>(TData message) where TData : class
         {
-            return _connection.Publish<T>(message);
+            return _connection.Publish<TData>(message);
         }
 
         #endregion

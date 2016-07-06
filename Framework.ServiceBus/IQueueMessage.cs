@@ -1,4 +1,4 @@
-﻿namespace Framework.Queue
+﻿namespace Framework.ServiceBus
 {
     public interface IQueueMessage<T> where T : class
     {
