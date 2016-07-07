@@ -3,6 +3,9 @@ using Autofac.Integration.WebApi;
 using Framework.Cache;
 using Framework.Data;
 using Framework.Queue;
+using Framework.ServiceBus;
+using Framework.WebSockets;
+using System;
 using System.Reflection;
 using System.Web.Http;
 
@@ -22,17 +25,29 @@ namespace WebApp.API
             if (builder == null)
                 builder = new ContainerBuilder();
 
+            // Controllers
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
 
-            // Register the classes we need
+            // Mongo
             var mongoProvider = new MongoDatabaseProvider(AppSettings.MongoDbHostname, AppSettings.MongoDbPort, AppSettings.MongoDbDatabase);
-
-            builder.Register(c => new RedisProvider(AppSettings.RedisHostname, AppSettings.RedisPort)).As<ICacheProvider>().SingleInstance();
-            builder.Register(c => new RabbitMQProvider(AppSettings.RabbitMQHostname, AppSettings.RabbitMQPort)).As<ISimpleQueueProvider>().SingleInstance();
             builder.Register(c => mongoProvider).As<IDatabaseProvider>().SingleInstance();
-            builder.Register(c => mongoProvider.GetDatabase()).As<IDatabaseConnection>().InstancePerRequest();
+            builder.Register(c => mongoProvider.GetDatabase()).As<IDatabaseConnection>().InstancePerLifetimeScope();
 
-            //builder.RegisterModule(new QueueModule());
+            // Redis
+            builder.Register(c => new RedisProvider(AppSettings.RedisHostname, AppSettings.RedisPort)).As<ICacheProvider>().SingleInstance();
+            //builder.Register(c => c.Resolve<ICacheProvider>().GetStore(AppSettings.RedisDatabaseIndex)).As<ICacheStore>().InstancePerRequest();
+            builder.Register(c => c.Resolve<ICacheProvider>().GetStore(AppSettings.RedisDatabaseIndex)).As<ICacheStore>().InstancePerLifetimeScope();
+
+            // Rabbit
+            builder.Register(c => new RabbitMQProvider(AppSettings.RabbitMQHostname, AppSettings.RabbitMQPort)).As<ISimpleQueueProvider>().SingleInstance();
+
+            // Mass transit & consumers
+            builder.Register(c => new ServiceBusProvider(c.Resolve<ILifetimeScope>(), AppSettings.RabbitMQHostname, AppSettings.RabbitMQPort))
+                .As<IServiceBusProvider>().SingleInstance();
+            builder.RegisterModule(new ServiceBusModule());
+
+            // SignalR
+            builder.RegisterType<SignalRProvider>().As<ISocketProvider>().SingleInstance();
 
             return builder;
         }
@@ -47,7 +62,7 @@ namespace WebApp.API
             var container = builder.Build();
             var config = GlobalConfiguration.Configuration;
             config.DependencyResolver = new AutofacWebApiDependencyResolver(container.BeginLifetimeScope());
-            
+
             return container;
         }
     }

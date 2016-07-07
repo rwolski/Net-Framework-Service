@@ -57,7 +57,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CachedEntityAttribute.cs" />
-    <Compile Include="Class1.cs" />
     <Compile Include="ICacheProvider.cs" />
     <Compile Include="ICacheStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

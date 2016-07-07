@@ -81,20 +81,20 @@ namespace Framework.Tests
             Assert.AreEqual("blah", _test2Action);
         }
 
-        [TestMethod]
-        [TestCategory("QueueTests")]
-        public async Task MassTransitAnonymousPubSubTest()
-        {
+        //[TestMethod]
+        //[TestCategory("QueueTests")]
+        //public async Task MassTransitAnonymousPubSubTest()
+        //{
             //_test1Action = 0;
             //_test2Action = null;
 
             //const string queue = "MassTransitPublishTest";
 
-            //var entity1 = new 
+            //var entity1 = new
             //{
             //    Val = 2
             //};
-            //var entity2 = new 
+            //var entity2 = new
             //{
             //    Val = "blah"
             //};
@@ -114,7 +114,7 @@ namespace Framework.Tests
 
             //Assert.AreEqual(2, _test1Action);
             //Assert.AreEqual("blah", _test2Action);
-        }
+        //}
     }
 }
 

@@ -48,8 +48,6 @@ namespace Framework.ServiceBus
 
         #endregion
 
-        #region Send
-
         public async virtual Task Send<TData>(TData message) where TData : class
         {
             var uri = _settings.BuildUri(_queueName + "/");
@@ -62,7 +60,12 @@ namespace Framework.ServiceBus
             return _connection.Publish<TData>(message);
         }
 
-        #endregion
+        public virtual Task<TData> Request<TData>(Uri uri)
+        {
+            throw new NotImplementedException();
+            //return Task.FromResult(default(TData));
+            //return _connection.CreateRequestClient<IServiceBusRequest, IServiceBusResponse>(uri, TimeSpan.FromSeconds(30));
+        }
 
         #region IDispose
 

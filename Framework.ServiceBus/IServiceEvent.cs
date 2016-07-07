@@ -9,4 +9,16 @@ namespace Framework.ServiceBus
 
         Task Action();
     }
+
+    public interface IServiceContractAction<TContract> where TContract : class
+    {
+        TContract Contract { get; }
+
+        Task Action();
+    }
+
+    public interface IServiceContract
+    {
+        int Val { get; }
+    }
 }

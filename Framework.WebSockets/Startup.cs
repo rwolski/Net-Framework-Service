@@ -11,11 +11,13 @@ namespace Framework.WebSockets
         public void Configuration(IAppBuilder app)
         {
             GlobalHost.HubPipeline.AddModule(new SignalRErrorHandling());
+            //GlobalHost.DependencyResolver = new DefaultDependencyResolver();
 
-            app.MapSignalR("/sockets", new HubConfiguration()
-            {
-                EnableDetailedErrors = true
-            });
+            var config = new HubConfiguration();
+            config.EnableJavaScriptProxies = true;
+            config.EnableDetailedErrors = true;
+
+            app.MapSignalR("/sockets", config);
         }
     }
 }

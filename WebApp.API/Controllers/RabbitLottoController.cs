@@ -12,23 +12,23 @@ namespace WebApp.API.Controllers
     /// </summary>
     /// <seealso cref="System.Web.Http.ApiController" />
     //[AutofacControllerConfiguration]
-    [RoutePrefix("api/powerball")]
-    public class PowerballController : ApiController
+    [RoutePrefix("api/rabbitlotto")]
+    public class RabbitLottoController : ApiController
     {
-        readonly ICacheProvider _cacheProvider;
+        readonly ICacheStore _cacheStore;
         readonly ISimpleQueueProvider _queueProvider;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PowerballController"/> class.
+        /// Initializes a new instance of the <see cref="RabbitLottoController"/> class.
         /// </summary>
-        public PowerballController(ICacheProvider cacheProvider, ISimpleQueueProvider queueProvider)
+        public RabbitLottoController(ICacheStore cacheStore, ISimpleQueueProvider queueProvider)
         {
-            if (cacheProvider == null)
-                throw new ArgumentNullException("cacheProvider");
+            if (cacheStore == null)
+                throw new ArgumentNullException("cacheStore");
             if (queueProvider == null)
                 throw new ArgumentNullException("queueProvider");
 
-            _cacheProvider = cacheProvider;
+            _cacheStore = cacheStore;
             _queueProvider = queueProvider;
         }
 
@@ -37,26 +37,22 @@ namespace WebApp.API.Controllers
         /// Gets the latest powerball draw (GET api/powerball).
         /// </summary>
         /// <returns></returns>
-        public PowerballDrawModel Get()
+        public async Task<RabbitLottoDrawModel> Get()
         {
-            var store = _cacheProvider.GetStore(AppSettings.RedisDatabaseIndex);
-            var drawModel = store.GetObject<PowerballDrawModel>();
-
+            var drawModel = await _cacheStore.GetObject<RabbitLottoDrawModel>();
             if (drawModel != null)
             {
                 return drawModel;
             }
 
-            using (var q = _queueProvider.GetQueue<PowerballDrawModel>())
+            using (var q = _queueProvider.GetQueue<RabbitLottoDrawModel>())
             {
-                drawModel = q.Receive().Result;
+                drawModel = await q.Receive();
                 if (drawModel != null)
-                    store.SetObject(drawModel);
+                    await _cacheStore.SetObject(drawModel);
 
                 return drawModel;
             }
-
-            return new PowerballDrawModel();
         }
     }
 }

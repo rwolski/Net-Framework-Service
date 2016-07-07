@@ -9,5 +9,7 @@ namespace Framework.ServiceBus
 
         Task Publish<TData>(TData message) where TData : class;
 
+        Task<TData> Request<TData>(Uri uri);
+
     }
 }

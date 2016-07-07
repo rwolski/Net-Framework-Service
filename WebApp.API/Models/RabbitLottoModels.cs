@@ -1,19 +1,17 @@
 ﻿using Framework.Cache;
 using Framework.Queue;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 namespace WebApp.API.Models
 {
     /// <summary>
     /// Powerball draw model
     /// </summary>
-    [CachedEntity("PowerballDrawCache")]
-    [QueuedEntity("PowerballDrawQueue")]
-    public class PowerballDrawModel
+    [CachedEntity("RabbitLottoDraw")]
+    [QueuedEntity("RabbitLottoDraw")]
+    public class RabbitLottoDrawModel
     {
         /// <summary>
         /// The draw winning numbers
@@ -38,24 +36,5 @@ namespace WebApp.API.Models
         /// </summary>
         [JsonProperty("draw_status")]
         public DrawStatusCode DrawStatus;
-    }
-
-    /// <summary>
-    /// Draw status codes
-    /// </summary>
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum DrawStatusCode
-    {
-        /// <summary>
-        /// Draw is closed
-        /// </summary>
-        [EnumMember(Value = "closed")]
-        Closed = 0,
-
-        /// <summary>
-        /// Draw is open
-        /// </summary>
-        [EnumMember(Value = "open")]
-        Open = 1
     }
 }

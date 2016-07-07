@@ -9,14 +9,14 @@ namespace WebApp.API.Models
     /// <summary>
     /// Oz lotto draw model
     /// </summary>
-    [PersistedEntity("OzLottoDrawMongo")]
-    [QueuedEntity("OzLottoDrawQueue")]
-    public class OzLottoDrawModel : Entity
+    [PersistedEntity("MongoLottoDraw")]
+    [QueuedEntity("MongoLottoDraw")]
+    public class MongoLottoDrawModel : Entity
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="OzLottoDrawModel"/> class.
+        /// Initializes a new instance of the <see cref="MongoLottoDrawModel"/> class.
         /// </summary>
-        public OzLottoDrawModel()
+        public MongoLottoDrawModel()
         {
         }
 
@@ -79,7 +79,7 @@ namespace WebApp.API.Models
             if (obj == null || GetType() != obj.GetType())
                 return false;
 
-            return Equals((OzLottoDrawModel)obj);
+            return Equals((MongoLottoDrawModel)obj);
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace WebApp.API.Models
         /// </summary>
         /// <param name="other">The other.</param>
         /// <returns></returns>
-        public bool Equals(OzLottoDrawModel other)
+        public bool Equals(MongoLottoDrawModel other)
         {
             return this.DrawNumber == other.DrawNumber;
         }

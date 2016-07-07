@@ -42,13 +42,13 @@ namespace WebApp.API
         /// The redis port.
         /// </value>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public static int RedisPort
+        public static UInt16 RedisPort
         {
             get
             {
                 var str = ConfigurationManager.AppSettings[RedisPortKey];
-                int val;
-                if (string.IsNullOrWhiteSpace(str) || !Int32.TryParse(str, out val))
+                UInt16 val;
+                if (string.IsNullOrWhiteSpace(str) || !UInt16.TryParse(str, out val))
                     throw new ArgumentNullException(RedisPortKey);
                 return val;
             }
@@ -98,13 +98,13 @@ namespace WebApp.API
         /// The rabbit mq port.
         /// </value>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public static int RabbitMQPort
+        public static UInt16 RabbitMQPort
         {
             get
             {
                 var str = ConfigurationManager.AppSettings[RabbitMQPortKey];
-                int val;
-                if (string.IsNullOrWhiteSpace(str) || !Int32.TryParse(str, out val))
+                UInt16 val;
+                if (string.IsNullOrWhiteSpace(str) || !UInt16.TryParse(str, out val))
                     throw new ArgumentNullException(RabbitMQPortKey);
                 return val;
             }
@@ -136,13 +136,13 @@ namespace WebApp.API
         /// The mongo db port.
         /// </value>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public static int MongoDbPort
+        public static UInt16 MongoDbPort
         {
             get
             {
                 var str = ConfigurationManager.AppSettings[MongoDbPortKey];
-                int val;
-                if (string.IsNullOrWhiteSpace(str) || !Int32.TryParse(str, out val))
+                UInt16 val;
+                if (string.IsNullOrWhiteSpace(str) || !UInt16.TryParse(str, out val))
                     throw new ArgumentNullException(MongoDbPortKey);
                 return val;
             }

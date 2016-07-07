@@ -119,6 +119,7 @@
     <Compile Include="Controllers\HomeControllerTest.cs" />
     <Compile Include="Controllers\ValuesControllerTest.cs" />
     <Compile Include="TestModules.cs" />
+    <Compile Include="TransitEventTests.cs" />
     <Compile Include="UnitTest.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -128,13 +129,29 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Framework.API\Framework.API.csproj">
+      <Project>{123a617f-f812-4406-872e-92e5b816bae7}</Project>
+      <Name>Framework.API</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Framework.Cache\Framework.Cache.csproj">
       <Project>{3854f9dd-bbd2-4e7e-8eec-58f2e7df33f9}</Project>
       <Name>Framework.Cache</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Framework.Core\Framework.Core.csproj">
+      <Project>{99104898-a486-42e0-beca-6cf3542631d3}</Project>
+      <Name>Framework.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Framework.Data\Framework.Data.csproj">
+      <Project>{e82ac2f5-b4dd-4c42-8854-952bca78d334}</Project>
+      <Name>Framework.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Framework.Queue\Framework.Queue.csproj">
       <Project>{04216074-028e-4d39-ae79-3369ae2bbdbf}</Project>
       <Name>Framework.Queue</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Framework.ServiceBus\Framework.ServiceBus.csproj">
+      <Project>{5ef380dc-66da-4b54-9613-2ead8b2d9077}</Project>
+      <Name>Framework.ServiceBus</Name>
     </ProjectReference>
     <ProjectReference Include="..\WebApp.API\WebApp.API.csproj">
       <Project>{C90D3AD5-9E41-4742-9538-89A76A413AE4}</Project>

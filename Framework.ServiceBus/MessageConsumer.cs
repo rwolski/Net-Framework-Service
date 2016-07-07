@@ -38,13 +38,13 @@ namespace Framework.ServiceBus
         }
     }
 
-    public class MessageConsumer<T> : IConsumer<T> where T : class, IServiceEvent
+    public class MessageConsumer<T> : IConsumer<T>, IDisposable where T : class, IServiceEvent
     {
         ILifetimeScope _scope;
 
         public MessageConsumer(ILifetimeScope scope)
         {
-            _scope = scope;
+            _scope = scope.BeginLifetimeScope();
         }
 
         public Task Consume(ConsumeContext<T> context)
@@ -52,5 +52,44 @@ namespace Framework.ServiceBus
             context.Message.Scope = _scope;
             return context.Message.Action();
         }
+
+        ~MessageConsumer()
+        {
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _scope.Dispose();
+            }
+        }
+
+    }
+
+    public class MessageConsumer2<T> : IConsumer<T> where T : class
+    {
+        ILifetimeScope _scope;
+
+        public MessageConsumer2(ILifetimeScope scope)
+        {
+            _scope = scope;
+        }
+
+        public Task Consume(ConsumeContext<T> context)
+        {
+            var handler = _scope.Resolve<IServiceContractAction<T>>(new TypedParameter(typeof(T), context.Message));
+            return handler.Action();
+
+            //return Task.FromResult(0);
+        }
+
     }
 }

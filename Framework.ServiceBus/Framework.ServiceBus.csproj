@@ -76,7 +76,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ServiceEvent.cs" />
+    <Compile Include="ServiceContractAction.cs" />
     <Compile Include="IServiceEvent.cs" />
     <Compile Include="ServiceBusModule.cs" />
     <Compile Include="IServiceBus.cs" />

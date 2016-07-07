@@ -4,6 +4,7 @@ using StackExchange.Redis.Extensions.Newtonsoft;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Framework.Cache
 {
@@ -24,31 +25,31 @@ namespace Framework.Cache
 
         #region Get
 
-        public string GetString(string key)
+        public Task<string> GetString(string key)
         {
             if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException("key");
 
-            return _client.Get<string>(key);
+            return _client.GetAsync<string>(key);
         }
 
-        public IEnumerable<string> GetList(string key)
+        public Task<IEnumerable<string>> GetList(string key)
         {
             if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException("key");
 
-            return _client.SetMember(key).Select(x => x.ToString()).ToList();
+            return _client.SetMemberAsync(key).ContinueWith(ct => ct.Result.ToList() as IEnumerable<string>);
         }
 
-        public T GetObject<T>(string key)
+        public Task<T> GetObject<T>(string key)
         {
             if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException("key");
 
-            return _client.Get<T>(key);
+            return _client.GetAsync<T>(key);
         }
 
-        public T GetObject<T>()
+        public Task<T> GetObject<T>()
         {
             var cacheAttribute = typeof(T).GetCustomAttributes(typeof(CachedEntityAttribute), false).Cast<CachedEntityAttribute>().FirstOrDefault();
             if (cacheAttribute == null || string.IsNullOrWhiteSpace(cacheAttribute.CacheName))
@@ -61,33 +62,32 @@ namespace Framework.Cache
 
         #region Set
 
-        public void SetString(string key, string val, int expiryMinutes = 60)
+        public Task SetString(string key, string val, int expiryMinutes = 60)
         {
             if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException("key");
             if (string.IsNullOrWhiteSpace(val))
                 throw new ArgumentNullException("val");
 
-            _client.Remove(key);
-            _client.Add(key, val, TimeSpan.FromMinutes(expiryMinutes));
+            return _client.AddAsync(key, val, TimeSpan.FromMinutes(expiryMinutes));
         }
 
-        public void SetList(string key, IEnumerable<string> list, int expiryMinutes = 60)
+        public async Task SetList(string key, IEnumerable<string> list, int expiryMinutes = 60)
         {
             if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException("key");
             if (list == null || list.Count() == 0)
                 throw new ArgumentNullException("list");
 
-            _client.Remove(key);
+            await _client.RemoveAsync(key);
 
-            foreach (var val in list)
-                _client.SetAdd<string>(key, val);
+            List<Task> results = list.Select(x => _client.SetAddAsync<string>(key, x) as Task).ToList();
+            results.Add(_client.Database.KeyExpireAsync(key, TimeSpan.FromMinutes(expiryMinutes)));
 
-            _client.Database.KeyExpire(key, DateTime.Now.AddMinutes(expiryMinutes));
+            await Task.WhenAll(results);
         }
 
-        public void SetObject<T>(string key, T obj, int expiryMinutes = 60)
+        public async Task SetObject<T>(string key, T obj, int expiryMinutes = 60)
         {
             if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException("key");
@@ -98,19 +98,19 @@ namespace Framework.Cache
             if (type.IsPrimitive || Type.GetTypeCode(type) == TypeCode.String)
                 throw new InvalidOperationException("Primitive types are not supported");
 
-            _client.Remove(key);
-            _client.Add(key, obj, TimeSpan.FromMinutes(expiryMinutes));
+            await _client.RemoveAsync(key);
+            await _client.AddAsync(key, obj, TimeSpan.FromMinutes(expiryMinutes));
         }
 
-        public void SetObject<T>(T obj, int expiryMinutes = 60)
+        public async Task SetObject<T>(T obj, int expiryMinutes = 60)
         {
             var cacheAttribute = typeof(T).GetCustomAttributes(typeof(CachedEntityAttribute), false).Cast<CachedEntityAttribute>().FirstOrDefault();
-            SetObject<T>(cacheAttribute.CacheName, obj, expiryMinutes);
+            await SetObject<T>(cacheAttribute.CacheName, obj, expiryMinutes);
         }
 
-        public void Unset(string key)
+        public Task Unset(string key)
         {
-            _client.Remove(key);
+            return _client.RemoveAsync(key);
         }
 
         #endregion

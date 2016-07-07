@@ -13,16 +13,16 @@ namespace WebApp.API.Controllers
     /// Oz lotto controller
     /// </summary>
     /// <seealso cref="System.Web.Http.ApiController" />
-    [RoutePrefix("api/ozlotto")]
-    public class OzLottoController : ApiController
+    [RoutePrefix("api/mongolotto")]
+    public class MongoLottoController : ApiController
     {
         readonly IDatabaseConnection _dataConnection;
         readonly ISimpleQueueProvider _queueProvider;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="OzLottoController"/> class.
+        /// Initializes a new instance of the <see cref="MongoLottoController"/> class.
         /// </summary>
-        public OzLottoController(IDatabaseConnection dataConnection, ISimpleQueueProvider queueProvider)
+        public MongoLottoController(IDatabaseConnection dataConnection, ISimpleQueueProvider queueProvider)
         {
             if (dataConnection == null)
                 throw new ArgumentNullException("dataConnection");
@@ -38,16 +38,16 @@ namespace WebApp.API.Controllers
         /// Gets the latest powerball draw (GET api/powerball).
         /// </summary>
         /// <returns></returns>
-        public OzLottoDrawModel Get()
+        public MongoLottoDrawModel Get()
         {
-            var store = _dataConnection.GetCollection<OzLottoDrawModel>();
+            var store = _dataConnection.GetCollection<MongoLottoDrawModel>();
 
             // Get the last closed draw
             var drawModel = store.FindFirstOrDefault(
-                new WhereCondition<OzLottoDrawModel>(x => x.DrawStatus == DrawStatusCode.Closed),
-                new List<OrderBy<OzLottoDrawModel>>()
+                new WhereCondition<MongoLottoDrawModel>(x => x.DrawStatus == DrawStatusCode.Closed),
+                new List<OrderBy<MongoLottoDrawModel>>()
                 {
-                    new OrderBy<OzLottoDrawModel>()
+                    new OrderBy<MongoLottoDrawModel>()
                     {
                         Exp = x => x.DrawNumber,
                         Ascending = false
@@ -59,7 +59,7 @@ namespace WebApp.API.Controllers
                 return drawModel;
             }
 
-            using (var q = _queueProvider.GetQueue<OzLottoDrawModel>())
+            using (var q = _queueProvider.GetQueue<MongoLottoDrawModel>())
             {
                 drawModel = q.Receive().Result;
                 if (drawModel != null)
@@ -67,8 +67,6 @@ namespace WebApp.API.Controllers
 
                 return drawModel;
             }
-
-            return new OzLottoDrawModel();
         }
     }
 }

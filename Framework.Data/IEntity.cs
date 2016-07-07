@@ -21,7 +21,7 @@ namespace Framework.Data
     {
         DateTime? CreatedDateTime { get; }
 
-        DateTime? UpdatedDateTime { get; set; }
+        DateTime? UpdatedDateTime { get; }
 
         int Version { get; }
     }
