@@ -3,18 +3,15 @@ using System.Threading.Tasks;
 
 namespace Framework.ServiceBus
 {
-    public class ServiceContractAction<TContract> : IServiceContractAction<TContract> where TContract : class
+    public abstract class ServiceContractAction<TContract> : IServiceContractAction<TContract> where TContract : class
     {
         public TContract Contract { get; protected set; }
 
-        public ServiceContractAction(TContract contract, ILifetimeScope scope)
+        public ServiceContractAction(TContract contract)
         {
             Contract = contract;
         }
 
-        public Task Action()
-        {
-            return Task.FromResult(0);
-        }
+        public abstract Task Action();
     }
 }
