@@ -28,6 +28,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework.ServiceBus", "Fra
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework.Core", "Framework.Core\Framework.Core.csproj", "{99104898-A486-42E0-BECA-6CF3542631D3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp.API.Contracts", "WebApp.API.Contracts\WebApp.API.Contracts.csproj", "{1BABE167-DF05-4637-A599-5C2B8A58858D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +76,10 @@ Global
 		{99104898-A486-42E0-BECA-6CF3542631D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99104898-A486-42E0-BECA-6CF3542631D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99104898-A486-42E0-BECA-6CF3542631D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BABE167-DF05-4637-A599-5C2B8A58858D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BABE167-DF05-4637-A599-5C2B8A58858D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BABE167-DF05-4637-A599-5C2B8A58858D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BABE167-DF05-4637-A599-5C2B8A58858D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

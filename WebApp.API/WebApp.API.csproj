@@ -236,14 +236,12 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
-    <Compile Include="Contracts\ITransitLottoEvents.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MongoLottoController.cs" />
     <Compile Include="Controllers\TransitLottoController.cs" />
     <Compile Include="Controllers\RabbitLottoController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
-    <Compile Include="Definitions\DrawStatusCode.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -356,6 +354,10 @@
     <ProjectReference Include="..\Framework.WebSockets\Framework.WebSockets.csproj">
       <Project>{5e069392-ed61-4b32-965b-ee8a20abfd1c}</Project>
       <Name>Framework.WebSockets</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WebApp.API.Contracts\WebApp.API.Contracts.csproj">
+      <Project>{1babe167-df05-4637-a599-5c2b8a58858d}</Project>
+      <Name>WebApp.API.Contracts</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

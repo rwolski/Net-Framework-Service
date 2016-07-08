@@ -3,11 +3,11 @@ using System.Threading.Tasks;
 
 namespace Framework.ServiceBus
 {
-    public abstract class ServiceContractAction<TContract> : IServiceContractAction<TContract> where TContract : class
+    public abstract class MessageAction<TContract> : IMessageAction<TContract> where TContract : class
     {
         public TContract Contract { get; protected set; }
 
-        public ServiceContractAction(TContract contract)
+        public MessageAction(TContract contract)
         {
             Contract = contract;
         }

@@ -73,23 +73,4 @@ namespace Framework.ServiceBus
         }
 
     }
-
-    public class MessageConsumer2<T> : IConsumer<T> where T : class
-    {
-        ILifetimeScope _scope;
-
-        public MessageConsumer2(ILifetimeScope scope)
-        {
-            _scope = scope;
-        }
-
-        public Task Consume(ConsumeContext<T> context)
-        {
-            var handler = _scope.Resolve<IServiceContractAction<T>>(new TypedParameter(typeof(T), context.Message));
-            return handler.Action();
-            //var u = 3;
-            //return Task.FromResult(0);
-        }
-
-    }
 }

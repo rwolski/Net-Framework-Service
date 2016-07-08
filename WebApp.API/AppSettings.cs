@@ -16,6 +16,7 @@ namespace WebApp.API
         const string MongoDbHostnameKey = "MongoDbHostname";
         const string MongoDbPortKey = "MongoDbPort";
         const string MongoDbDatabaseKey = "MongoDbDatabase";
+        const string AppServiceBusNameKey = "AppServiceBusName";
 
         /// <summary>
         /// Gets the redis hostname.
@@ -162,6 +163,24 @@ namespace WebApp.API
                 var str = ConfigurationManager.AppSettings[MongoDbDatabaseKey];
                 if (string.IsNullOrWhiteSpace(str))
                     throw new ArgumentNullException(MongoDbDatabaseKey);
+                return str;
+            }
+        }
+
+        /// <summary>
+        /// Gets the application service bus name.
+        /// </summary>
+        /// <value>
+        /// The application bus name.
+        /// </value>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        public static string AppServiceBusName
+        {
+            get
+            {
+                var str = ConfigurationManager.AppSettings[AppServiceBusNameKey];
+                if (string.IsNullOrWhiteSpace(str))
+                    throw new ArgumentNullException(AppServiceBusNameKey);
                 return str;
             }
         }

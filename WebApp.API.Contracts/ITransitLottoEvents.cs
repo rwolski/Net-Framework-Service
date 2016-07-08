@@ -1,4 +1,4 @@
-﻿using Framework.Data;
+﻿using Framework.Core;
 using Framework.ServiceBus;
 using System;
 
@@ -8,7 +8,7 @@ namespace WebApp.API
     /// Interface for transit draw events
     /// </summary>
     /// <seealso cref="Framework.ServiceBus.IServiceEvent" />
-    /// <seealso cref="Framework.Data.IAuditable" />
+    /// <seealso cref="Framework.Core.IAuditable" />
     public interface ITransitLottoDrawEvent : IServiceEvent, IAuditable
     {
         /// <summary>

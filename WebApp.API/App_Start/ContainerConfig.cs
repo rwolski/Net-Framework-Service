@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Autofac.Integration.WebApi;
 using Framework.Cache;
+using Framework.Core;
 using Framework.Data;
 using Framework.Queue;
 using Framework.ServiceBus;
@@ -42,9 +43,18 @@ namespace WebApp.API
             builder.Register(c => new RabbitMQProvider(AppSettings.RabbitMQHostname, AppSettings.RabbitMQPort)).As<ISimpleQueueProvider>().SingleInstance();
 
             // Mass transit & consumers
-            builder.Register(c => new ServiceBusProvider(c.Resolve<ILifetimeScope>(), AppSettings.RabbitMQHostname, AppSettings.RabbitMQPort))
-                .As<IServiceBusProvider>().SingleInstance();
+            var serviceBusSettings = new ServiceProviderSettings()
+            {
+                Hostname = AppSettings.RabbitMQHostname,
+                Port = AppSettings.RabbitMQPort,
+                Username = "guest",
+                Password = "guest"
+            };
             builder.RegisterModule(new ServiceBusModule());
+            builder.Register(c => new ServiceBusProvider(c.Resolve<ILifetimeScope>(), serviceBusSettings))
+                .As<IServiceBusProvider>().SingleInstance();
+            builder.Register(c => new ServiceBus(c.Resolve<ILifetimeScope>(), serviceBusSettings, AppSettings.AppServiceBusName))
+                .As<IServiceBus>().SingleInstance();
 
             // SignalR
             builder.RegisterType<SignalRProvider>().As<ISocketProvider>().SingleInstance();

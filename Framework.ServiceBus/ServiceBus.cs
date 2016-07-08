@@ -3,16 +3,19 @@ using Framework.Core;
 using MassTransit;
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Framework.ServiceBus
 {
-    internal class ServiceBus : IServiceBus
+    public class ServiceBus : IServiceBus
     {
         readonly IBusControl _connection;
 
         readonly IServiceProviderSettings _settings;
         readonly string _queueName;
+
+        const int _defaultTimeoutSeconds = 30;
 
         #region Constructors
 
@@ -48,23 +51,41 @@ namespace Framework.ServiceBus
 
         #endregion
 
-        public async virtual Task Send<TData>(TData message) where TData : class
+        public async virtual Task Send<TData>(TData message, CancellationToken ct = default(CancellationToken))
+            where TData : class
         {
             var uri = _settings.BuildUri(_queueName + "/");
             var endpoint = await _connection.GetSendEndpoint(uri);
             await endpoint.Send<TData>(message);
         }
 
-        public virtual Task Publish<TData>(TData message) where TData : class
+        public virtual Task Publish<TData>(object message, CancellationToken ct = default(CancellationToken))
+            where TData : class
         {
             return _connection.Publish<TData>(message);
         }
 
-        public virtual Task<TData> Request<TData>(Uri uri)
+        public virtual Task Publish<TData>(TData message, CancellationToken ct = default(CancellationToken))
+            where TData : class
         {
-            throw new NotImplementedException();
-            //return Task.FromResult(default(TData));
-            //return _connection.CreateRequestClient<IServiceBusRequest, IServiceBusResponse>(uri, TimeSpan.FromSeconds(30));
+            return _connection.Publish(message);
+        }
+
+        public virtual Task<TData> Request<TReq, TData>(TReq request, CancellationToken ct = default(CancellationToken))
+            where TReq : class, IMessageRequest
+            where TData : class
+        {
+            var requestHandle = _connection.CreatePublishRequestClient<TReq, TData>(TimeSpan.FromSeconds(_defaultTimeoutSeconds));
+            return requestHandle.Request(request, ct);
+        }
+
+        public virtual Task<TData> Request<TReq, TData>(TReq request, string destination, CancellationToken ct = default(CancellationToken))
+            where TReq : class, IMessageRequest
+            where TData : class
+        {
+            var requestHandle = _connection.CreateRequestClient<TReq, TData>(_settings.BuildUri(_queueName + "/"),
+                TimeSpan.FromSeconds(_defaultTimeoutSeconds));
+            return requestHandle.Request(request, ct);
         }
 
         #region IDispose

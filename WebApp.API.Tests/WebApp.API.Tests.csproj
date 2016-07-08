@@ -153,6 +153,10 @@
       <Project>{5ef380dc-66da-4b54-9613-2ead8b2d9077}</Project>
       <Name>Framework.ServiceBus</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WebApp.API.Contracts\WebApp.API.Contracts.csproj">
+      <Project>{1babe167-df05-4637-a599-5c2b8a58858d}</Project>
+      <Name>WebApp.API.Contracts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WebApp.API\WebApp.API.csproj">
       <Project>{C90D3AD5-9E41-4742-9538-89A76A413AE4}</Project>
       <Name>WebApp.API</Name>

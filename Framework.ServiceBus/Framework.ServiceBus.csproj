@@ -7,8 +7,8 @@
     <ProjectGuid>{5EF380DC-66DA-4B54-9613-2EAD8B2D9077}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ServiceBus</RootNamespace>
-    <AssemblyName>ServiceBus</AssemblyName>
+    <RootNamespace>Framework.ServiceBus</RootNamespace>
+    <AssemblyName>Framework.ServiceBus</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -76,12 +76,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ServiceContractAction.cs" />
-    <Compile Include="IServiceEvent.cs" />
+    <Compile Include="ContractMessageConsumer.cs" />
+    <Compile Include="IMessageReponse.cs" />
+    <Compile Include="IMessageAction.cs" />
+    <Compile Include="IMessageContract.cs" />
+    <Compile Include="IMessageRequest.cs" />
+    <Compile Include="MessageResponse.cs" />
+    <Compile Include="MessageAction.cs" />
+    <Compile Include="Old\IServiceEvent.cs" />
     <Compile Include="ServiceBusModule.cs" />
     <Compile Include="IServiceBus.cs" />
     <Compile Include="IServiceBusProvider.cs" />
-    <Compile Include="MessageConsumer.cs" />
+    <Compile Include="Old\MessageConsumer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceBus.cs" />
     <Compile Include="ServiceBusProvider.cs" />

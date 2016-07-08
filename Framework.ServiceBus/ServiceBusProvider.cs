@@ -10,14 +10,16 @@ namespace Framework.ServiceBus
         readonly ILifetimeScope _scope;
 
 
-        public ServiceBusProvider(ILifetimeScope scope, string hostname = "localhost", UInt16 port = 5672, string username = "guest", string password = "guest")
+        public ServiceBusProvider(ILifetimeScope scope, IServiceProviderSettings settings)
         {
-            if (string.IsNullOrWhiteSpace(hostname))
-                throw new ArgumentNullException("hostname");
-            if (port <= 0)
-                throw new ArgumentOutOfRangeException("port");
+            if (settings == null)
+                throw new ArgumentNullException("settings");
+            if (string.IsNullOrWhiteSpace(settings.Hostname))
+                throw new ArgumentNullException("settings.Hostname");
+            if (settings.Port <= 0)
+                throw new ArgumentOutOfRangeException("settings.Port");
 
-            _settings = new ServiceProviderSettings(hostname, port);
+            _settings = settings;
             _scope = scope;
         }
 

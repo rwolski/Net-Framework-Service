@@ -9,15 +9,4 @@ namespace Framework.ServiceBus
 
         Task Action();
     }
-
-    public interface IServiceContractAction<TContract>
-    {
-        TContract Contract { get; }
-
-        Task Action();
-    }
-
-    public interface IServiceContract
-    {
-    }
 }
