@@ -13,6 +13,6 @@ namespace Framework.ServiceBus
             Request = request;
         }
 
-        public abstract Task<object> Response();
+        public abstract Task<TRequest> Response();
     }
 }

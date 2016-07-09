@@ -1,4 +1,6 @@
-﻿namespace Framework.ServiceBus
+﻿using System;
+
+namespace Framework.ServiceBus
 {
     public interface IMessageRequest
     {

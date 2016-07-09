@@ -1,8 +1,10 @@
 ﻿using Autofac;
 using Framework.ServiceBus;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using static Framework.ServiceBus.ServiceBusModule;
 
 namespace Framework.Tests
 {
@@ -84,6 +86,8 @@ namespace Framework.Tests
         //}
 
         #endregion
+
+        #region Pub/Sub
 
         public interface ITestContract1 : IMessageContract
         {
@@ -193,57 +197,9 @@ namespace Framework.Tests
             Assert.AreEqual(2, _test1Action);
         }
 
-        public interface IDoubleMeRequest : IMessageRequest
-        {
-            int Val { get; }
-        }
+        #endregion
 
-        public class DoubleMeRequest : IDoubleMeRequest
-        {
-            public int Val { get; set; }
-        }
-
-        public interface IDoubleMeResponse : IMessageContract
-        {
-            int Val { get; }
-        }
-
-        public class DoubleMeResponse : IDoubleMeResponse
-        {
-            public int Val { get; set; }
-        }
-
-
-        public class DoubleMeRequestAction : MessageResponse<IDoubleMeRequest>
-        {
-            IServiceBus _bus;
-
-            public DoubleMeRequestAction(IDoubleMeRequest contract, IServiceBus bus)
-                : base(contract)
-            {
-                _bus = bus;
-            }
-
-            public override Task<object> Response()
-            {
-                var result = new DoubleMeResponse() { Val = Request.Val * 2 };
-                return Task.FromResult((object)result);
-            }
-        }
-
-        //public class DoubleMeResponseAction : MessageAction<IDoubleMeResponse>
-        //{
-        //    public DoubleMeResponseAction(IDoubleMeContract contract)
-        //        : base(contract)
-        //    {
-        //    }
-
-        //    public override Task Action()
-        //    {
-        //        _test1Action = Contract.Val;
-        //        return Task.FromResult(0);
-        //    }
-        //}
+        
 
         [TestMethod]
         [TestCategory("ServiceBus")]
@@ -252,35 +208,23 @@ namespace Framework.Tests
             _test1Action = 0;
             _test2Action = null;
 
-            var bus = Container.Resolve<IServiceBus>();
-
-            var request = new DoubleMeRequest()
+            try
             {
-                Val = 2
-            };
-            var entity1 = await bus.Request<IDoubleMeRequest, IDoubleMeResponse>(request);
 
-            Assert.AreEqual(4, entity1.Val);
+                var bus = Container.Resolve<IServiceBus>();
 
-            //using (var scope = Container.BeginLifetimeScope(b =>
-            //{
-            //    b.Register(c => c.Resolve<IServiceBusProvider>().GetBus("MassTransit_RequestResponseTest")).As<IServiceBus>().SingleInstance();
-            //}))
-            //{
-            //    using (var bus = new ServiceBus.ServiceBus(scope, scope.Resolve<IServiceProviderSettings>(), ""))
-            //    {
-            //        //var bus = Container.Resolve<IServiceBusProvider>().GetBus("MassTransit_RequestResponseTest");
-            //        //var bus = scope.Resolve<IServiceBus>();
+                var request = new DoubleMeRequest()
+                {
+                    Val = 2
+                };
+                var entity1 = await bus.Request<IDoubleMeRequest, IDoubleMeRequest>(request);
 
-            //        var request = new DoubleMeRequest()
-            //        {
-            //            Val = 2
-            //        };
-            //        var entity1 = await bus.Request<DoubleMeRequest, IDoubleMeContract>(request);
-
-            //        Assert.AreEqual(4, entity1.Val);
-            //    }
-            //}
+                Assert.AreEqual(4, entity1.Val);
+            }
+            catch (Exception e)
+            {
+                var i = 3;
+            }
         }
     }
 }

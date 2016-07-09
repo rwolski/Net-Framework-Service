@@ -2,6 +2,7 @@
 using MassTransit;
 using System;
 using System.Threading.Tasks;
+using static Framework.ServiceBus.ServiceBusModule;
 
 namespace Framework.ServiceBus
 {

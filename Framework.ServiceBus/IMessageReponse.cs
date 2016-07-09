@@ -6,6 +6,6 @@ namespace Framework.ServiceBus
     {
         TRequest Request { get; }
 
-        Task<object> Response();
+        Task<TRequest> Response();
     }
 }

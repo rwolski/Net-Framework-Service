@@ -9,6 +9,55 @@ namespace Framework.ServiceBus
 {
     public class ServiceBusModule : Autofac.Module
     {
+        public interface IDoubleMeRequest : IMessageRequest
+        {
+            int Val { get; }
+        }
+
+        public class DoubleMeRequest : IDoubleMeRequest
+        {
+            public int Val { get; set; }
+        }
+
+        public interface IDoubleMeResponse : IMessageContract
+        {
+            int Val { get; }
+        }
+
+        public class DoubleMeResponse : IDoubleMeResponse
+        {
+            public int Val { get; set; }
+        }
+
+
+        public class DoubleMeRequestAction : MessageResponse<IDoubleMeRequest>
+        {
+            public DoubleMeRequestAction(IDoubleMeRequest contract)
+                : base(contract)
+            {
+            }
+
+            public override Task<IDoubleMeRequest> Response()
+            {
+                var result = new DoubleMeRequest() { Val = Request.Val * 2 };
+                return Task.FromResult<IDoubleMeRequest>(result);
+            }
+        }
+
+        //public class DoubleMeResponseAction : MessageAction<IDoubleMeResponse>
+        //{
+        //    public DoubleMeResponseAction(IDoubleMeContract contract)
+        //        : base(contract)
+        //    {
+        //    }
+
+        //    public override Task Action()
+        //    {
+        //        _test1Action = Contract.Val;
+        //        return Task.FromResult(0);
+        //    }
+        //}
+
         //void RegisterType1(ContainerBuilder builder)
         //{
         //    // Register the generic message consumer

@@ -15,7 +15,7 @@ namespace Framework.ServiceBus
         readonly IServiceProviderSettings _settings;
         readonly string _queueName;
 
-        const int _defaultTimeoutSeconds = 30;
+        const int _defaultTimeoutSeconds = 60;
 
         #region Constructors
 
