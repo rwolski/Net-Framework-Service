@@ -9,40 +9,44 @@ namespace Framework.ServiceBus
 {
     public class ServiceBusModule : Autofac.Module
     {
-        public interface IDoubleMeRequest : IMessageRequest
-        {
-            int Val { get; }
-        }
+        //public interface IDoubleMeRequest : IMessageRequest
+        //{
+        //    int Val { get; }
+        //}
 
-        public class DoubleMeRequest : IDoubleMeRequest
-        {
-            public int Val { get; set; }
-        }
+        //public class DoubleMeRequest : IDoubleMeRequest
+        //{
+        //    public int Val { get; set; }
+        //}
 
-        public interface IDoubleMeResponse : IMessageContract
-        {
-            int Val { get; }
-        }
+        //public interface IDoubleMeResponse : IMessageResponse<IDoubleMeRequest>
+        //{
+        //    int Val { get; }
+        //}
 
-        public class DoubleMeResponse : IDoubleMeResponse
-        {
-            public int Val { get; set; }
-        }
+        //public class DoubleMeResponse : IDoubleMeResponse
+        //{
+        //    public int Val { get; set; }
+
+        //    public DoubleMeResponse()
+        //    {
+        //    }
+        //}
 
 
-        public class DoubleMeRequestAction : MessageResponse<IDoubleMeRequest>
-        {
-            public DoubleMeRequestAction(IDoubleMeRequest contract)
-                : base(contract)
-            {
-            }
+        //public class DoubleMeRequestAction : MessageRequestHandler<IDoubleMeRequest>
+        //{
+        //    public DoubleMeRequestAction(IDoubleMeRequest contract)
+        //        : base(contract)
+        //    {
+        //    }
 
-            public override Task<IDoubleMeRequest> Response()
-            {
-                var result = new DoubleMeRequest() { Val = Request.Val * 2 };
-                return Task.FromResult<IDoubleMeRequest>(result);
-            }
-        }
+        //    public override Task<IMessageResponse<IDoubleMeRequest>> Response()
+        //    {
+        //        var result = new DoubleMeResponse() { Val = Request.Val * 2 };
+        //        return Task.FromResult<IMessageResponse<IDoubleMeRequest>>(result);
+        //    }
+        //}
 
         //public class DoubleMeResponseAction : MessageAction<IDoubleMeResponse>
         //{
@@ -100,24 +104,46 @@ namespace Framework.ServiceBus
                     //throw new InvalidOperationException("Message contract provided without consuming action");
             }
 
-            var requestTypes = assemblyTypes
-                .Where(p => typeof(IMessageRequest).IsAssignableFrom(p) && p.IsAbstract && p != typeof(IMessageRequest));
 
-            foreach (var type in requestTypes)
-            {
-                // Register a consumer for the contract itself
-                builder.RegisterType(typeof(RequestMessageConsumer<>).MakeGenericType(type)).InstancePerLifetimeScope();
+            builder.RegisterType<RequestMessageConsumer<ITestRequest>>().InstancePerLifetimeScope();
+            builder.RegisterType<RequestMessageConsumer<ITestRequest1>>().InstancePerLifetimeScope();
+            builder.RegisterType<TestRequestHandler>().As<IMessageRequestHandler<ITestRequest>>();
+            builder.RegisterType<TestRequestHandler>().As<IMessageRequestHandler<ITestRequest1>>();
 
-                var genericActionType = typeof(IMessageResponse<>).MakeGenericType(type);
-                var actionType = assemblyTypes
-                    .Where(r => genericActionType.IsAssignableFrom(r))
-                    .FirstOrDefault();
+            //builder.RegisterType<RequestMessageConsumer<ITestRequestById>>().InstancePerLifetimeScope();
+            //builder.RegisterType<RequestMessageConsumer<ITestRequestByName>>().InstancePerLifetimeScope();
 
-                if (actionType != null)
-                    builder.RegisterType(actionType).As(genericActionType);
-                //else
-                    //throw new InvalidOperationException("Message request provided without consuming response");
-            }
+            //builder.RegisterGeneric(typeof(IMessageRequestHandler<,>));
+
+            //var t1 = typeof(IMessageRequestHandler<,>).MakeGenericType(typeof(ITestRequestById), typeof(ITestEntity));
+            //builder.RegisterType<TestMessageRequestHandler>().As(t1);
+            //builder.RegisterType<TestMessageRequestHandler>().As<IMessageRequestResponse<ITestEntity>>();
+            //builder.RegisterType<TestMessageRequestHandler>().As<IMessageRequestArgs<ITestRequestById>>();
+
+
+
+            //builder.RegisterType<TestMessageRequestHandler>().As<IMessageRequestHandler<ITestRequestById, IMessageContract>>();
+
+            //var requestTypes = assemblyTypes
+            //    .Where(p => typeof(IMessageRequest).IsAssignableFrom(p) && p.IsAbstract && p != typeof(IMessageRequest));
+
+            //foreach (var type in requestTypes)
+            //{
+            //    // Register a consumer for the contract itself
+            //    builder.RegisterType(typeof(RequestMessageConsumer<>).MakeGenericType(type)).InstancePerLifetimeScope();
+
+            //    var genericActionType = typeof(IMessageRequestHandler<>).MakeGenericType(type);
+            //    var actionType = assemblyTypes
+            //        .Where(r => genericActionType.IsAssignableFrom(r))
+            //        .FirstOrDefault();
+
+            //    if (actionType != null)
+            //        builder.RegisterType(actionType).As(genericActionType);
+            //    //else
+            //    //throw new InvalidOperationException("Message request provided without consuming response");
+            //}
+
+            //builder.RegisterType<DoubleMeResponse>().As<IMessageResponse<IDoubleMeRequest>>();
 
 
             //var contractTypes = assemblyTypes

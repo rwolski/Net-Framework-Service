@@ -1,5 +1,4 @@
-﻿using Autofac;
-using Autofac.Extras.Moq;
+﻿using Autofac.Extras.Moq;
 using Framework.Cache;
 using Framework.Queue;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -10,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApp.API.Controllers;
 using WebApp.API.Models;
+using WebApp.API.Contracts;
 
 namespace WebApp.API.Tests.Controllers
 {

@@ -1,10 +1,7 @@
-﻿using Autofac;
-using Framework.Cache;
-using Framework.Data;
-using Framework.WebSockets;
+﻿using Framework.Data;
 using Newtonsoft.Json;
 using System;
-using System.Threading.Tasks;
+using WebApp.API.Contracts;
 
 namespace WebApp.API.Models
 {
@@ -12,7 +9,7 @@ namespace WebApp.API.Models
     /// Transit draw model based on event
     /// </summary>
     /// <seealso cref="Framework.Data.Entity" />
-    /// <seealso cref="WebApp.API.ITransitLottoDrawEvent" />
+    /// <seealso cref="WebApp.API.Contracts.ITransitLottoDrawEvent" />
     public class TransitLottoDrawModel : Entity
     {
         /// <summary>

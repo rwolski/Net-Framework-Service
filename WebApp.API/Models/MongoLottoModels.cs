@@ -3,6 +3,7 @@ using Framework.Queue;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using WebApp.API.Contracts;
 
 namespace WebApp.API.Models
 {

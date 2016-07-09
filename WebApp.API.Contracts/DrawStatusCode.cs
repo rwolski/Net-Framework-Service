@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Converters;
 using System.Runtime.Serialization;
 
-namespace WebApp.API
+namespace WebApp.API.Contracts
 {
     /// <summary>
     /// Draw status codes

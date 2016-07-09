@@ -5,7 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using WebApp.API.ServiceHandler;
-using static Framework.ServiceBus.ServiceBusModule;
+using WebApp.API.Contracts;
 
 namespace WebApp.API.Tests
 {

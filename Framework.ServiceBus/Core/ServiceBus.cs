@@ -35,10 +35,15 @@ namespace Framework.ServiceBus
                 {
                     h.Username(settings.Username);
                     h.Password(settings.Password);
+                    //h.UseCluster();
                 });
+
+                cfg.EnablePerformanceCounters();
+                cfg.UseJsonSerializer();
 
                 cfg.ReceiveEndpoint(host, queueName, e =>
                 {
+                    e.PrefetchCount = 100;
                     e.LoadFrom(container);
                 });
             });
@@ -72,7 +77,7 @@ namespace Framework.ServiceBus
         }
 
         public virtual Task<TData> Request<TReq, TData>(TReq request, CancellationToken ct = default(CancellationToken))
-            where TReq : class, IMessageRequest
+            where TReq : class
             where TData : class
         {
             var requestHandle = _connection.CreatePublishRequestClient<TReq, TData>(TimeSpan.FromSeconds(_defaultTimeoutSeconds));
@@ -80,7 +85,7 @@ namespace Framework.ServiceBus
         }
 
         public virtual Task<TData> Request<TReq, TData>(TReq request, string destination, CancellationToken ct = default(CancellationToken))
-            where TReq : class, IMessageRequest
+            where TReq : class
             where TData : class
         {
             var requestHandle = _connection.CreateRequestClient<TReq, TData>(_settings.BuildUri(_queueName + "/"),

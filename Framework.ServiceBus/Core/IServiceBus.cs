@@ -16,11 +16,11 @@ namespace Framework.ServiceBus
             where TData : class;
 
         Task<TData> Request<TReq, TData>(TReq request, CancellationToken ct = default(CancellationToken))
-            where TReq : class, IMessageRequest
+            where TReq : class
             where TData : class;
 
         Task<TData> Request<TReq, TData>(TReq request, string destination, CancellationToken ct = default(CancellationToken))
-            where TReq : class, IMessageRequest
+            where TReq : class
             where TData : class;
     }
 }

@@ -210,16 +210,52 @@ namespace Framework.Tests
 
             try
             {
-
                 var bus = Container.Resolve<IServiceBus>();
 
-                var request = new DoubleMeRequest()
-                {
-                    Val = 2
-                };
-                var entity1 = await bus.Request<IDoubleMeRequest, IDoubleMeRequest>(request);
+                //var request = new MessageRequestArgs()
+                //{
+                //    Val = 2
+                //};
+                //var entity1 = await bus.Request<IDoubleMeRequest, IMessageResponse<IDoubleMeRequest>>(request);
 
-                Assert.AreEqual(4, entity1.Val);
+                //Assert.AreEqual(4, (entity1 as IDoubleMeResponse).Val);
+
+                //var request1 = new TestRequestById()
+                //{
+                //    Id = 12
+                //};
+                //var entity1 = await bus.Request<ITestRequestById, ITestEntity>(request1);
+
+                //Assert.AreEqual(1, entity1.Id);
+                //Assert.AreEqual("Ryan", entity1.Name);
+
+                //var request2 = new TestRequestByName()
+                //{
+                //    Name = "Blah"
+                //};
+                //var entity2 = await bus.Request<ITestRequestByName, ITestEntity>(request2);
+
+                //Assert.AreEqual(2, entity2.Id);
+                //Assert.AreEqual("Chappy", entity2.Name);
+
+
+                var request1 = new TestRequest()
+                {
+                    Id = 12
+                };
+                var entity1 = await bus.Request<ITestRequest, ITestEntity>(request1);
+
+                Assert.AreEqual(12, entity1.Id);
+                Assert.AreEqual("Ryan", entity1.Name);
+
+                var request2 = new TestRequest1()
+                {
+                    Name = "Chappy"
+                };
+                var entity2 = await bus.Request<ITestRequest1, ITestEntity>(request2);
+
+                Assert.AreEqual(14, entity2.Id);
+                Assert.AreEqual("Chappy", entity2.Name);
             }
             catch (Exception e)
             {

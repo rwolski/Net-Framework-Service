@@ -2,7 +2,7 @@
 using Framework.ServiceBus;
 using System;
 
-namespace WebApp.API
+namespace WebApp.API.Contracts
 {
     /// <summary>
     /// Interface for transit draw events

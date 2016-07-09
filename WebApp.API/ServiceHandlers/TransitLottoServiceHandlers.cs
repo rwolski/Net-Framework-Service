@@ -3,6 +3,7 @@ using Framework.Cache;
 using Framework.WebSockets;
 using System.Threading.Tasks;
 using WebApp.API.Models;
+using WebApp.API.Contracts;
 
 namespace WebApp.API.ServiceHandler
 {
@@ -10,7 +11,7 @@ namespace WebApp.API.ServiceHandler
     /// Transit draw model based on event
     /// </summary>
     /// <seealso cref="Framework.Data.Entity" />
-    /// <seealso cref="WebApp.API.ITransitLottoDrawEvent" />
+    /// <seealso cref="WebApp.API.Contracts.ITransitLottoDrawEvent" />
     public class TransitLottoDrawEventServiceHandler : TransitLottoDrawModel, ITransitLottoDrawEvent
     {
         /// <summary>
