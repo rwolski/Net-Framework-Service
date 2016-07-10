@@ -81,11 +81,10 @@
     <Compile Include="Publish\IMessageAction.cs" />
     <Compile Include="Publish\IMessageContract.cs" />
     <Compile Include="Request\IMessageRequestHandler.cs" />
-    <Compile Include="Request\TestMessageRequestHandler.cs" />
     <Compile Include="Publish\MessageAction.cs" />
     <Compile Include="Old\IServiceEvent.cs" />
-    <Compile Include="RequestMessageConsumer.cs" />
-    <Compile Include="ServiceBusModule.cs" />
+    <Compile Include="Request\RequestMessageConsumer.cs" />
+    <Compile Include="Core\ServiceBusModule.cs" />
     <Compile Include="Core\IServiceBus.cs" />
     <Compile Include="Core\IServiceBusProvider.cs" />
     <Compile Include="Old\MessageConsumer.cs" />

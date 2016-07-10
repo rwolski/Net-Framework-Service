@@ -36,7 +36,6 @@ namespace WebApp.API
 
             // Redis
             builder.Register(c => new RedisProvider(AppSettings.RedisHostname, AppSettings.RedisPort)).As<ICacheProvider>().SingleInstance();
-            //builder.Register(c => c.Resolve<ICacheProvider>().GetStore(AppSettings.RedisDatabaseIndex)).As<ICacheStore>().InstancePerRequest();
             builder.Register(c => c.Resolve<ICacheProvider>().GetStore(AppSettings.RedisDatabaseIndex)).As<ICacheStore>().InstancePerLifetimeScope();
 
             // Rabbit

@@ -199,45 +199,76 @@ namespace Framework.Tests
 
         #endregion
 
-        
+        #region Request/Response
+
+        public interface ITestEntity : IMessageContract
+        {
+            int Id { get; }
+            string Name { get; }
+        }
+
+        public class TestEntity : ITestEntity
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+        }
+
+
+
+        public interface ITestRequest : IMessageRequest<ITestEntity>
+        {
+            int Id { get; }
+        }
+
+        public class TestRequest : ITestRequest
+        {
+            public int Id { get; set; }
+        }
+
+        public interface ITestRequest1 : IMessageRequest<ITestEntity>
+        {
+            string Name { get; }
+        }
+
+        public class TestRequest1 : ITestRequest1
+        {
+            public string Name { get; set; }
+        }
+
+        public interface ITestRequestHandler<TReq> : IMessageRequestHandler<TReq>
+        {
+        }
+
+        public class TestRequestHandler : ITestRequestHandler<ITestRequest>, ITestRequestHandler<ITestRequest1>
+        {
+            public Task<object> Request(ITestRequest request)
+            {
+                ITestEntity entity = new TestEntity()
+                {
+                    Id = request.Id,
+                    Name = "Ryan"
+                };
+                return Task.FromResult((object)entity);
+            }
+
+            public Task<object> Request(ITestRequest1 request)
+            {
+                ITestEntity entity = new TestEntity()
+                {
+                    Id = 14,
+                    Name = request.Name
+                };
+                return Task.FromResult((object)entity);
+            }
+        }
 
         [TestMethod]
         [TestCategory("ServiceBus")]
         public async Task MassTransit_RequestResponseTest()
         {
-            _test1Action = 0;
-            _test2Action = null;
-
             try
             {
                 var bus = Container.Resolve<IServiceBus>();
-
-                //var request = new MessageRequestArgs()
-                //{
-                //    Val = 2
-                //};
-                //var entity1 = await bus.Request<IDoubleMeRequest, IMessageResponse<IDoubleMeRequest>>(request);
-
-                //Assert.AreEqual(4, (entity1 as IDoubleMeResponse).Val);
-
-                //var request1 = new TestRequestById()
-                //{
-                //    Id = 12
-                //};
-                //var entity1 = await bus.Request<ITestRequestById, ITestEntity>(request1);
-
-                //Assert.AreEqual(1, entity1.Id);
-                //Assert.AreEqual("Ryan", entity1.Name);
-
-                //var request2 = new TestRequestByName()
-                //{
-                //    Name = "Blah"
-                //};
-                //var entity2 = await bus.Request<ITestRequestByName, ITestEntity>(request2);
-
-                //Assert.AreEqual(2, entity2.Id);
-                //Assert.AreEqual("Chappy", entity2.Name);
-
 
                 var request1 = new TestRequest()
                 {
@@ -250,18 +281,20 @@ namespace Framework.Tests
 
                 var request2 = new TestRequest1()
                 {
-                    Name = "Chappy"
+                    Name = "Other"
                 };
                 var entity2 = await bus.Request<ITestRequest1, ITestEntity>(request2);
 
                 Assert.AreEqual(14, entity2.Id);
-                Assert.AreEqual("Chappy", entity2.Name);
+                Assert.AreEqual("Other", entity2.Name);
             }
-            catch (Exception e)
+            catch
             {
-                var i = 3;
+                Assert.Fail();
             }
         }
+
+        #endregion
     }
 }
 
