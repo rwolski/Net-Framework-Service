@@ -18,12 +18,12 @@ namespace WebApp.API.ServiceHandler
         /// <summary>
         /// Initializes a new instance of the <see cref="LotteryDrawModelRequestHandler"/> class.
         /// </summary>
-        public LotteryDrawModelRequestHandler(fix thisIEntityStorage<LotteriesDrawModel> database)
+        public LotteryDrawModelRequestHandler(IDatabaseConnection dataConnection)
         {
-            if (database == null)
-                throw new ArgumentNullException("database");
+            if (dataConnection == null)
+                throw new ArgumentNullException("dataConnection");
 
-            _drawModelStorage = database;
+            _drawModelStorage = dataConnection.GetCollection<LotteriesDrawModel>("Server_LotteriesDraw");
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace WebApp.API.ServiceHandler
                 }
             };
 
-            var lastDraw = _drawModelStorage.Find(null, orderBy, 1);
+            var lastDraw = _drawModelStorage.FindFirstOrDefault(null, orderBy);
             return Task.FromResult((object)lastDraw);
         }
     }

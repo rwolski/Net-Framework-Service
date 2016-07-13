@@ -92,6 +92,8 @@ namespace Framework.Tests
             Assert.AreEqual(20, findResult.ElementAt(1).TestField);
             Assert.AreEqual(15, findResult.ElementAt(2).TestField);
 
+            test lists and dates
+
             store.DropCollection(_collection);
             provider.DropDatabaseAsync(_database);
         }
