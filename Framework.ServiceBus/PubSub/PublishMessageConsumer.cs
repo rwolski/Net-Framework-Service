@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace Framework.ServiceBus
 {
-    public class ContractMessageConsumer<T> : IConsumer<T> where T : class
+    public class PublishMessageConsumer<T> : IConsumer<T> where T : class
     {
         readonly ILifetimeScope _scope;
 
-        public ContractMessageConsumer(ILifetimeScope scope)
+        public PublishMessageConsumer(ILifetimeScope scope)
         {
             if (scope == null)
                 throw new ArgumentNullException("scope");
@@ -19,8 +19,8 @@ namespace Framework.ServiceBus
 
         public Task Consume(ConsumeContext<T> context)
         {
-            var handler = _scope.Resolve<IMessageAction<T>>(new TypedParameter(typeof(T), context.Message));
-            return handler.Action();
+            var handler = _scope.Resolve<IMessageEventHandler<T>>(new TypedParameter(typeof(T), context.Message));
+            return handler.Handle();
         }
     }
 }

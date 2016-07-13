@@ -20,10 +20,17 @@ namespace Framework.ServiceBus
 
         public async Task Consume(ConsumeContext<T> context)
         {
-            var contractType = typeof(T).GetInterfaces().SelectMany(x => x.GetGenericArguments()).FirstOrDefault();
-            var handler = _scope.Resolve<IMessageRequestHandler<T>>();
-            var result = await handler.Request(context.Message);
-            await context.RespondAsync(result, contractType);
+            try
+            {
+                var contractType = typeof(T).GetInterfaces().SelectMany(x => x.GetGenericArguments()).FirstOrDefault();
+                var handler = _scope.Resolve<IMessageRequestHandler<T>>();
+                var result = await handler.Request(context.Message);
+                await context.RespondAsync(result, contractType);
+            }
+            catch (Exception e)
+            {
+                var i = 3;
+            }
         }
     }
 }

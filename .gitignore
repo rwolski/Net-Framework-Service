@@ -243,5 +243,5 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
-WebApp.API1/
-WebApp.Client/
+WebApp.Client/jspm_packages/github/
+WebApp.Client/jspm_packages/npm/

@@ -109,28 +109,28 @@ namespace Framework.Tests
             public string Val { get; set; }
         }
 
-        public class ServiceContractAction1 : MessageAction<ITestContract1>
+        public class TestContractHandler1 : MessageEventHandler<ITestContract1>
         {
-            public ServiceContractAction1(ITestContract1 contract, ILifetimeScope scope)
+            public TestContractHandler1(ITestContract1 contract, ILifetimeScope scope)
                 : base(contract)
             {
             }
 
-            public override Task Action()
+            public override Task Handle()
             {
                 _test1Action = Contract.Val;
                 return Task.FromResult(0);
             }
         }
 
-        public class ServiceContractAction2 : MessageAction<ITestContract2>
+        public class TestContractHandler2 : MessageEventHandler<ITestContract2>
         {
-            public ServiceContractAction2(ITestContract2 contract, ILifetimeScope scope)
+            public TestContractHandler2(ITestContract2 contract, ILifetimeScope scope)
                 : base(contract)
             {
             }
 
-            public override Task Action()
+            public override Task Handle()
             {
                 _test2Action = Contract.Val;
                 return Task.FromResult(0);

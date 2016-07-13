@@ -2,7 +2,7 @@
 using Microsoft.Owin;
 using Owin;
 
-[assembly: OwinStartup(typeof(Framework.WebSockets.Startup))]
+[assembly: OwinStartup("WebSockets", typeof(Framework.WebSockets.Startup))]
 
 namespace Framework.WebSockets
 {

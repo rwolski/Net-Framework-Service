@@ -119,7 +119,6 @@
     <Compile Include="Controllers\HomeControllerTest.cs" />
     <Compile Include="Controllers\ValuesControllerTest.cs" />
     <Compile Include="TestModules.cs" />
-    <Compile Include="TransitEventTests.cs" />
     <Compile Include="UnitTest.cs" />
   </ItemGroup>
   <ItemGroup>

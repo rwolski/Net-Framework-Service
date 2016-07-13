@@ -9,6 +9,7 @@ using Framework.WebSockets;
 using System;
 using System.Reflection;
 using System.Web.Http;
+using WebApp.API.Contracts;
 
 namespace WebApp.API
 {
@@ -49,7 +50,7 @@ namespace WebApp.API
                 Username = "guest",
                 Password = "guest"
             };
-            builder.RegisterModule(new ServiceBusModule());
+            builder.RegisterModule(new ServiceBusModule(Assembly.GetExecutingAssembly(), typeof(IDrawModelContract).Assembly));
             builder.Register(c => new ServiceBusProvider(c.Resolve<ILifetimeScope>(), serviceBusSettings))
                 .As<IServiceBusProvider>().SingleInstance();
             builder.Register(c => new ServiceBus(c.Resolve<ILifetimeScope>(), serviceBusSettings, AppSettings.AppServiceBusName))

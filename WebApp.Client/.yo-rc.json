@@ -1,0 +1,24 @@
+{
+  "generator-fountain-angular1": {
+    "version": "0.5.4",
+    "props": {
+      "framework": "angular1",
+      "modules": "systemjs",
+      "js": "js",
+      "css": "scss",
+      "sample": "todoMVC",
+      "router": "uirouter",
+      "projectName": "WebApp.Client",
+      "api": "none",
+      "resolved": "C:\\Yeoman\\generator-fountain-angular1\\generators\\app\\index.js",
+      "namespace": "fountain-angular1",
+      "argv": {
+        "remain": [],
+        "cooked": [],
+        "original": []
+      },
+      "skip-cache": false,
+      "skip-install": false
+    }
+  }
+}

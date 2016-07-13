@@ -76,12 +76,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PubSub\ContractMessageConsumer.cs" />
+    <Compile Include="PubSub\PublishMessageConsumer.cs" />
     <Compile Include="Request\IMessageRequest.cs" />
-    <Compile Include="PubSub\IMessageAction.cs" />
+    <Compile Include="PubSub\IMessageEventHandler.cs" />
     <Compile Include="PubSub\IMessageContract.cs" />
     <Compile Include="Request\IMessageRequestHandler.cs" />
-    <Compile Include="PubSub\MessageAction.cs" />
+    <Compile Include="PubSub\MessageEventHandler.cs" />
     <Compile Include="Old\IServiceEvent.cs" />
     <Compile Include="Request\RequestMessageConsumer.cs" />
     <Compile Include="Core\ServiceBusModule.cs" />

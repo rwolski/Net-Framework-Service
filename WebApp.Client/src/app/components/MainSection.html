@@ -1,0 +1,15 @@
+<section class="main">
+  <ul class="draw-list">
+    <draw-item
+      ng-repeat="draw in $ctrl.draws.filter($ctrl.selectedFilter.filter)"
+      draw="draw"
+      on-change="$ctrl.handleChange(id)"
+    ></draw-item>
+  </ul>
+  <footer-component ng-if="$ctrl.draws.length"
+    closed-count="$ctrl.draw.reduce($ctrl.closedReducer, 0)"
+    open-count="$ctrl.draw.length - $ctr.draw.reduce($ctrl.closedReducer, 0)"
+    filter="$ctrl.selectedFilter"
+    on-show="$ctrl.handleShow(filter)"
+  ></footer-component>
+</section>

@@ -1,0 +1,10 @@
+<footer class="footer">
+  <span class="draw-count">
+    <strong>{{$ctrl.openCount || 'No'}}</strong> open draws
+  </span>
+  <ul class="filters">
+    <li key="filter" ng-repeat="filter in $ctrl.filters">
+      <a ng-class="{'selected': filter === $ctrl.selectedFilter.type}" ng-click="$ctrl.handleChange(filter)">{{$ctrl.filterTitles[filter]}}</a>
+    </li>
+  </ul>  
+</footer>

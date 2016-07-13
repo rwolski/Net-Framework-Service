@@ -50,9 +50,9 @@ namespace Framework.ServiceBus
             foreach (var type in contractTypes)
             {
                 // Register a consumer for the contract itself
-                builder.RegisterType(typeof(ContractMessageConsumer<>).MakeGenericType(type)).InstancePerLifetimeScope();
+                builder.RegisterType(typeof(PublishMessageConsumer<>).MakeGenericType(type)).InstancePerLifetimeScope();
 
-                var genericActionType = typeof(IMessageAction<>).MakeGenericType(type);
+                var genericActionType = typeof(IMessageEventHandler<>).MakeGenericType(type);
                 var actionType = assemblyTypes
                     .Where(r => genericActionType.IsAssignableFrom(r))
                     .FirstOrDefault();
@@ -64,12 +64,12 @@ namespace Framework.ServiceBus
             }
 
             // Consumers
-            //builder.RegisterType<ContractMessageConsumer<ITestContract1>>();
-            //builder.RegisterType<ContractMessageConsumer<ITestContract2>>();
+            //builder.RegisterType<PublishMessageConsumer<ITestContract1>>();
+            //builder.RegisterType<PublishMessageConsumer<ITestContract2>>();
 
             // Contract actions
-            //builder.RegisterType<ServiceContractAction1>().As<IMessageAction<ITestContract1>>();
-            //builder.RegisterType<ServiceContractAction2>().As<IMessageAction<ITestContract1>>();
+            //builder.RegisterType<ServiceContractAction1>().As<IMessageEventHandler<ITestContract1>>();
+            //builder.RegisterType<ServiceContractAction2>().As<IMessageEventHandler<ITestContract1>>();
 
 
 

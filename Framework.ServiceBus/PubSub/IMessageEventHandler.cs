@@ -2,10 +2,10 @@
 
 namespace Framework.ServiceBus
 {
-    public interface IMessageAction<TContract>
+    public interface IMessageEventHandler<TContract>
     {
         TContract Contract { get; }
 
-        Task Action();
+        Task Handle();
     }
 }
