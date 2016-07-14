@@ -45,10 +45,10 @@ namespace WebApp.API.Controllers
         /// </summary>
         /// <returns></returns>
         [Route("draw")]
-        public async Task<LotteriesDrawModel> Get()
+        public async Task<IDrawModelContract> Get()
         {
             // Check the cache first for the latest result
-            var drawModel = await _cacheStore.GetObject<LotteriesDrawModel>();
+            IDrawModelContract drawModel = await _cacheStore.GetObject<LotteriesDrawModel>();
             if (drawModel != null)
             {
                 return drawModel;
@@ -56,7 +56,11 @@ namespace WebApp.API.Controllers
 
             // Not found, now send a request to the host layer
             var request = new LotteryDrawModelRequestLast();
-            drawModel = await _serviceBus.Request<LotteryDrawModelRequestLast, LotteriesDrawModel>(request);
+            drawModel = await _serviceBus.Request<LotteryDrawModelRequestLast, IDrawModelContract>(request);
+
+            TODO
+                Need to make the bus operations take and return interfaces - this are only good for behind the scenes stuff
+            //_cacheStore.SetObject<LotteriesDrawModel>(drawModel);
 
             return drawModel;
         }

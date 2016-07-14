@@ -205,15 +205,15 @@ namespace Framework.Tests
         {
             int Id { get; }
             string Name { get; }
+            IList<int> Values { get; }
         }
 
         public class TestEntity : ITestEntity
         {
             public int Id { get; set; }
             public string Name { get; set; }
+            public IList<int> Values { get; set; }
         }
-
-
 
         public interface ITestRequest : IMessageRequest<ITestEntity>
         {
@@ -235,11 +235,21 @@ namespace Framework.Tests
             public string Name { get; set; }
         }
 
+        public interface ITestRequest2 : IMessageRequest<ITestEntity>
+        {
+            IList<int> Values { get; }
+        }
+
+        public class TestRequest2 : ITestRequest2
+        {
+            public IList<int> Values { get; set; }
+        }
+
         public interface ITestRequestHandler<TReq> : IMessageRequestHandler<TReq>
         {
         }
 
-        public class TestRequestHandler : ITestRequestHandler<ITestRequest>, ITestRequestHandler<ITestRequest1>
+        public class TestRequestHandler : ITestRequestHandler<ITestRequest>, ITestRequestHandler<ITestRequest1>, ITestRequestHandler<ITestRequest2>
         {
             public Task<object> Request(ITestRequest request)
             {
@@ -260,38 +270,59 @@ namespace Framework.Tests
                 };
                 return Task.FromResult((object)entity);
             }
+
+            public Task<object> Request(ITestRequest2 request)
+            {
+                ITestEntity entity = new TestEntity()
+                {
+                    Id = 1,
+                    Name = "Return",
+                    Values = request.Values
+                };
+                return Task.FromResult((object)entity);
+            }
         }
 
         [TestMethod]
         [TestCategory("ServiceBus")]
         public async Task MassTransit_RequestResponseTest()
         {
-            try
+            var bus = Container.Resolve<IServiceBus>();
+
+            var request1 = new TestRequest()
             {
-                var bus = Container.Resolve<IServiceBus>();
+                Id = 12
+            };
+            var entity1 = await bus.Request<ITestRequest, ITestEntity>(request1);
 
-                var request1 = new TestRequest()
-                {
-                    Id = 12
-                };
-                var entity1 = await bus.Request<ITestRequest, ITestEntity>(request1);
+            Assert.AreEqual(12, entity1.Id);
+            Assert.AreEqual("Ryan", entity1.Name);
 
-                Assert.AreEqual(12, entity1.Id);
-                Assert.AreEqual("Ryan", entity1.Name);
-
-                var request2 = new TestRequest1()
-                {
-                    Name = "Other"
-                };
-                var entity2 = await bus.Request<ITestRequest1, ITestEntity>(request2);
-
-                Assert.AreEqual(14, entity2.Id);
-                Assert.AreEqual("Other", entity2.Name);
-            }
-            catch
+            var request2 = new TestRequest1()
             {
-                Assert.Fail();
-            }
+                Name = "Other"
+            };
+            var entity2 = await bus.Request<ITestRequest1, ITestEntity>(request2);
+
+            Assert.AreEqual(14, entity2.Id);
+            Assert.AreEqual("Other", entity2.Name);
+        }
+
+        [TestMethod]
+        [TestCategory("ServiceBus")]
+        public async Task MassTransit_ListTest()
+        {
+            var bus = Container.Resolve<IServiceBus>();
+
+            var request2 = new TestRequest2()
+            {
+                Values = new List<int>{ 1, 2, 3 }
+            };
+            var entity2 = await bus.Request<ITestRequest2, ITestEntity>(request2);
+
+            Assert.AreEqual(1, entity2.Values[0]);
+            Assert.AreEqual(2, entity2.Values[1]);
+            Assert.AreEqual(3, entity2.Values[2]);
         }
 
         #endregion

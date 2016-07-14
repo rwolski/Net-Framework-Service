@@ -10,11 +10,13 @@ namespace Framework.Data
     {
         public string FieldName { get; private set; }
         public bool Incrementing { get; set; }
+        public bool StringRepresentation { get; set; }
 
         public EntityFieldAttribute(string fieldName = null)
         {
             FieldName = fieldName;
             Incrementing = false;
+            StringRepresentation = false;
         }
     }
 

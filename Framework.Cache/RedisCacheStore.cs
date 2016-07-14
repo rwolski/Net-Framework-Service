@@ -105,7 +105,7 @@ namespace Framework.Cache
         public async Task SetObject<T>(T obj, int expiryMinutes = 60)
         {
             var cacheAttribute = typeof(T).GetCustomAttributes(typeof(CachedEntityAttribute), false).Cast<CachedEntityAttribute>().FirstOrDefault();
-            await SetObject<T>(cacheAttribute.CacheName, obj, expiryMinutes);
+            await SetObject<T>(cacheAttribute.CacheName ?? typeof(T).Name, obj, expiryMinutes);
         }
 
         public Task Unset(string key)

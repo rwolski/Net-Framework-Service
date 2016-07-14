@@ -18,6 +18,6 @@ namespace WebApp.API
         /// <value>
         /// The draws.
         /// </value>
-        public IDrawModelContract[] Draws { get; set; }
+        public IEnumerable<IDrawModelContract> Draws { get; set; }
     }
 }

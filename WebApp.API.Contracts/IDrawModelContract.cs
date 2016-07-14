@@ -1,41 +1,34 @@
 ﻿using Framework.Core;
+using Framework.Data;
 using Framework.ServiceBus;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace WebApp.API.Contracts
 {
-    public interface IDrawModelContract : IMessageContract, IAuditable
+    [JsonObject("IDrawModelContract")]
+    public interface IDrawModelContract : IMessageContract, IEntity, IAuditable
     {
-        /// <summary>
-        /// Gets the draw winning numbers.
-        /// </summary>
-        /// <value>
-        /// The draw winning numbers.
-        /// </value>
-        int[] DrawWinningNumbers { get; }
+        [JsonProperty("draw_winning_numbers")]
+        IEnumerable<int> DrawWinningNumbers { get; }
 
         /// <summary>
-        /// Gets the draw date time.
+        /// The draw date time
         /// </summary>
-        /// <value>
-        /// The draw date time.
-        /// </value>
+        [JsonProperty("draw_date_time")]
         DateTime DrawDateTime { get; }
 
         /// <summary>
-        /// Gets the draw number.
+        /// The draw number
         /// </summary>
-        /// <value>
-        /// The draw number.
-        /// </value>
+        [JsonProperty("draw_number")]
         int DrawNumber { get; }
 
         /// <summary>
-        /// Gets the draw status.
+        /// The draw status
         /// </summary>
-        /// <value>
-        /// The draw status.
-        /// </value>
+        [JsonProperty("draw_status")]
         DrawStatusCode DrawStatus { get; }
     }
 }

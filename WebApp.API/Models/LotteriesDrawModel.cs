@@ -1,6 +1,7 @@
 ﻿using Framework.Data;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using WebApp.API.Contracts;
 
 namespace WebApp.API
@@ -11,13 +12,14 @@ namespace WebApp.API
     /// <seealso cref="Framework.Data.Entity" />
     /// <seealso cref="WebApp.API.Contracts.ITransitLottoDrawEvent" />
     [PersistedEntity("LotteriesDraw")]
+    [JsonObject("LotteriesDrawModel")]
     public class LotteriesDrawModel : Entity, IDrawModelContract
     {
         /// <summary>
         /// The draw winning numbers
         /// </summary>
         [JsonProperty("draw_winning_numbers")]
-        public int[] DrawWinningNumbers { get; set; }
+        public IEnumerable<int> DrawWinningNumbers { get; set; }
 
         /// <summary>
         /// The draw date time

@@ -54,7 +54,13 @@ namespace WebApp.API.ServiceHandler
             };
 
             var lastDraw = _drawModelStorage.FindFirstOrDefault(null, orderBy);
-            return Task.FromResult((object)lastDraw);
+            if (lastDraw != null)
+            {
+                //lastDraw.Id = null;
+                return Task.FromResult((object)lastDraw);
+            }
+
+            return Task.FromResult<object>(null);
         }
     }
 }

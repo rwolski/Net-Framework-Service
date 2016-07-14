@@ -1,5 +1,6 @@
 ﻿using Framework.Core;
 using Framework.ServiceBus;
+using Newtonsoft.Json;
 using System;
 
 namespace WebApp.API.Contracts
@@ -16,6 +17,7 @@ namespace WebApp.API.Contracts
         /// <value>
         /// The draw identifier.
         /// </value>
+        [JsonProperty("draw_id")]
         int DrawId { get; }
     }
 
