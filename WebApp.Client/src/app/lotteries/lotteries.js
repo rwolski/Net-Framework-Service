@@ -2,28 +2,34 @@ import 'es6-shim';
 
 var initialDraws = [
 {
-  draw_id: 1,
-  draw_name: 'Powerball 1',
-  draw_numbers: [1, 2, 3],
-  draw_date: '2016-05-16',
+  draw_number: 1,
+  draw_winning_numbers: [1, 2, 3],
+  draw_date_time: '2016-05-16',
   draw_status: 'closed'
 },
 {
-  draw_id: 2,
-  draw_name: 'Powerball 2',
-  draw_numbers: [4, 5, 6],
-  draw_date: '2016-05-18',
+  draw_number: 2,
+  draw_winning_numbers: [4, 5, 6],
+  draw_date_time: '2016-05-18',
   draw_status: 'open'
 }];
 
-function LotteryService() {
+function LotteryService(http, serverUrl) {
+    this.$http = http;
+    this.request = function (endpoint) {
+        return serverUrl + endpoint;
+    }
 }
 
 LotteryService.prototype = {
   addDraw: function (draws, draw) {
     return draws.push(draw);
   },
-   
+
+  getDraws: function () {
+      return this.$http.get(this.request('lottery/draws'));
+  }
+
   /*completeTodo: function (id, todos) {
     return todos.map(function (todo) {
       return todo.id === id ?

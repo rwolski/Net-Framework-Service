@@ -10,16 +10,15 @@ namespace WebApp.API.ServiceHandler
     /// <summary>
     /// Request handler for service bus requests for lotter draws
     /// </summary>
-    /// <seealso cref="Framework.ServiceBus.IMessageRequestHandler{WebApp.API.Contracts.IDrawModelRequestById}" />
-    /// <seealso cref="Framework.ServiceBus.IMessageRequestHandler{WebApp.API.Contracts.IDrawModelRequestLatest}" />
-    public class LotteryDrawModelRequestHandler : IMessageRequestHandler<IDrawModelRequestById>, IMessageRequestHandler<IDrawModelRequestLatest>
+    /// <seealso cref="Framework.ServiceBus.IMessageRequestHandler{WebApp.API.Contracts.IDrawCollectionRequestLatest}" />
+    public class LotteryDrawCollectionRequestHandler : IMessageRequestHandler<IDrawCollectionRequestLatest>
     {
         readonly IEntityStorage<LotteriesDrawModel> _drawModelStorage;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LotteryDrawModelRequestHandler"/> class.
         /// </summary>
-        public LotteryDrawModelRequestHandler(IDatabaseConnection dataConnection)
+        public LotteryDrawCollectionRequestHandler(IDatabaseConnection dataConnection)
         {
             if (dataConnection == null)
                 throw new ArgumentNullException("dataConnection");
@@ -32,18 +31,7 @@ namespace WebApp.API.ServiceHandler
         /// </summary>
         /// <param name="request">The request.</param>
         /// <returns></returns>
-        public Task<object> Request(IDrawModelRequestById request)
-        {
-            var draw = _drawModelStorage.FindByIdentity(request.DrawId);
-            return Task.FromResult((object)draw);
-        }
-
-        /// <summary>
-        /// Performs the specified request.
-        /// </summary>
-        /// <param name="request">The request.</param>
-        /// <returns></returns>
-        public Task<object> Request(IDrawModelRequestLatest request)
+        public Task<object> Request(IDrawCollectionRequestLatest request)
         {
             var orderBy = new List<OrderBy<LotteriesDrawModel>>()
             {
@@ -54,7 +42,7 @@ namespace WebApp.API.ServiceHandler
                 }
             };
 
-            var lastDraw = _drawModelStorage.FindFirstOrDefault(null, orderBy);
+            var lastDraw = _drawModelStorage.Find(null, orderBy, request.limit);
             return Task.FromResult(lastDraw != null ? (object)lastDraw : null);
         }
     }

@@ -102,10 +102,22 @@ namespace Framework.Cache
             await _client.AddAsync(key, obj, TimeSpan.FromMinutes(expiryMinutes));
         }
 
-        public async Task SetObject<T>(T obj, int expiryMinutes = 60)
+        public Task SetObject<T>(object obj, int expiryMinutes = 60)
+        {
+            if (obj == null)
+                throw new ArgumentNullException("obj");
+
+            var type = typeof(T);
+            if (!obj.GetType().IsAssignableFrom(type))
+                throw new ArgumentException("Cache object cannot be cast to type " + type.Name);
+
+            return SetObject((T)obj, expiryMinutes);
+        }
+
+        public Task SetObject<T>(T obj, int expiryMinutes = 60)
         {
             var cacheAttribute = typeof(T).GetCustomAttributes(typeof(CachedEntityAttribute), false).Cast<CachedEntityAttribute>().FirstOrDefault();
-            await SetObject<T>(cacheAttribute.CacheName ?? typeof(T).Name, obj, expiryMinutes);
+            return SetObject<T>(cacheAttribute.CacheName ?? typeof(T).Name, obj, expiryMinutes);
         }
 
         public Task Unset(string key)

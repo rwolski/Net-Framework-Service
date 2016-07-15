@@ -1,7 +1,6 @@
 import angular from 'angular';
-import 'todomvc-app-css/index.css!';
+import css from './app/styles/index.css!';
 
-//import todos from './app/todos/todos.js';
 import lotteries from './app/lotteries/lotteries.js';
 import App from './app/containers/App.js';
 import Header from './app/components/Header.js';
@@ -14,7 +13,8 @@ import routesConfig from './routes.js';
 angular
   .module('app', ['ui.router'])
   .config(routesConfig)
-  .service('lotteryService', lotteries.LotteryService)
+  .value('serverUrl', 'http://webapp.localhost/api/')
+  .service('lotteryService', ['$http', 'serverUrl', lotteries.LotteryService])
   .component('app', App)
   .component('headerComponent', Header)
   .component('footerComponent', Footer)

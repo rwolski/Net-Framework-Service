@@ -5,6 +5,7 @@ using Microsoft.Owin;
 using Owin;
 using System.Web.Http;
 using Autofac.Integration.WebApi;
+using Microsoft.Owin.Cors;
 
 [assembly: OwinStartup(typeof(WebApp.API.Startup))]
 
@@ -18,6 +19,7 @@ namespace WebApp.API
         /// <param name="app">The application.</param>
         public void Configuration(IAppBuilder app)
         {
+            app.UseCors(CorsOptions.AllowAll);
             ConfigureAuth(app);
 
             var builder = ContainerConfig.RegisterModules();

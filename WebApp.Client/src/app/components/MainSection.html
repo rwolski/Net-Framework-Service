@@ -7,8 +7,8 @@
     ></draw-item>
   </ul>
   <footer-component ng-if="$ctrl.draws.length"
-    closed-count="$ctrl.draw.reduce($ctrl.closedReducer, 0)"
-    open-count="$ctrl.draw.length - $ctr.draw.reduce($ctrl.closedReducer, 0)"
+    closed-count="$ctrl.draws.reduce($ctrl.closedReducer, 0)"
+    open-count="$ctrl.draws.length - $ctrl.draws.reduce($ctrl.closedReducer, 0)"
     filter="$ctrl.selectedFilter"
     on-show="$ctrl.handleShow(filter)"
   ></footer-component>

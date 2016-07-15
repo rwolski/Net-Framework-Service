@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -18,7 +19,8 @@ namespace WebApp.API
         /// <value>
         /// The draw identifier.
         /// </value>
-        public int DrawId { get; set; }
+        [JsonProperty("draw_id")]
+        public Guid DrawId { get; set; }
     }
 
     /// <summary>

@@ -30,6 +30,8 @@ namespace Framework.Cache
 
         Task SetObject<T>(T obj, int expiryMinutes = 60);
 
+        Task SetObject<T>(object obj, int expiryMinutes = 60);
+
         Task Unset(string key);
 
         #endregion

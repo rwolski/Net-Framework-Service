@@ -10,4 +10,10 @@ function routesConfig($stateProvider, $urlRouterProvider, $locationProvider) {
       url: '/',
       template: '<app></app>'
     });
+
+  $stateProvider
+      .state('latest_draws', {
+          url: '/lottery/draws',
+          template: '<app></app>'
+      });
 }

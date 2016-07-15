@@ -245,11 +245,11 @@ namespace Framework.Tests
             public IList<int> Values { get; set; }
         }
 
-        public interface ITestRequestHandler<TReq> : IMessageRequestHandler<TReq>
-        {
-        }
+        //public interface ITestRequestHandler<TReq> : IMessageRequestHandler<TReq>
+        //{
+        //}
 
-        public class TestRequestHandler : ITestRequestHandler<ITestRequest>, ITestRequestHandler<ITestRequest1>, ITestRequestHandler<ITestRequest2>
+        public class TestRequestHandler : IMessageRequestHandler<ITestRequest>, IMessageRequestHandler<ITestRequest1>, IMessageRequestHandler<ITestRequest2>
         {
             public Task<object> Request(ITestRequest request)
             {

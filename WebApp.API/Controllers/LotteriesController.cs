@@ -48,7 +48,7 @@ namespace WebApp.API.Controllers
         public async Task<IDrawModelContract> Get()
         {
             // Check the cache first for the latest result
-            IDrawModelContract drawModel = await _cacheStore.GetObject<LotteriesDrawModel>();
+            IDrawModelContract drawModel = await _cacheStore.GetObject<IDrawModelContract>();
             if (drawModel != null)
             {
                 return drawModel;
@@ -58,9 +58,11 @@ namespace WebApp.API.Controllers
             var request = new LotteryDrawModelRequestLast();
             drawModel = await _serviceBus.Request<LotteryDrawModelRequestLast, IDrawModelContract>(request);
 
-            TODO
-                Need to make the bus operations take and return interfaces - this are only good for behind the scenes stuff
-            //_cacheStore.SetObject<LotteriesDrawModel>(drawModel);
+            if (drawModel != null)
+            {
+                // Set the result back into the cache
+                _cacheStore.SetObject<IDrawModelContract>(drawModel);
+            }
 
             return drawModel;
         }
@@ -70,10 +72,10 @@ namespace WebApp.API.Controllers
         /// </summary>
         /// <returns></returns>
         [Route("draw")]
-        public async Task<LotteriesDrawModel> Get(int drawId)
+        public async Task<IDrawModelContract> Get(Guid drawReference)
         {
             // Try to get the draw data from the local database
-            var drawModel = _drawStorage.FindByIdentity(drawId);
+            var drawModel = _drawStorage.FindByIdentity(drawReference);
             if (drawModel != null)
             {
                 return drawModel;
@@ -82,9 +84,15 @@ namespace WebApp.API.Controllers
             // Not found, now send a request to the host layer
             var request = new LotteryDrawModelRequestById()
             {
-                DrawId = drawId
+                DrawId = drawReference
             };
-            drawModel = await _serviceBus.Request<LotteryDrawModelRequestById, LotteriesDrawModel>(request);
+            var dataContract = await _serviceBus.Request<LotteryDrawModelRequestById, IDrawModelContract>(request);
+
+            if (dataContract != null)
+            {
+                drawModel = (LotteriesDrawModel)dataContract;
+                _drawStorage.Save(drawModel);
+            }
 
             return drawModel;
         }
@@ -94,7 +102,7 @@ namespace WebApp.API.Controllers
         /// </summary>
         /// <returns></returns>
         [Route("draws")]
-        public LotteriesDrawCollection GetCollection()
+        public async Task<IDrawCollectionContract> GetCollection(int limit = 5)
         {
             // Try to get the draw data from the local database
             var orderBy = new List<OrderBy<LotteriesDrawModel>>()
@@ -106,7 +114,7 @@ namespace WebApp.API.Controllers
                 }
             };
 
-            var lastDraws = _drawStorage.Find(null, orderBy, 5);
+            var lastDraws = _drawStorage.Find(null, orderBy, limit);
             if (lastDraws != null)
             {
                 return new LotteriesDrawCollection()
@@ -116,13 +124,23 @@ namespace WebApp.API.Controllers
             }
 
             // Not found, now send a request to the host layer
-            //var request = new LotteryDrawCollectionRequest()
-            //{
-            //    DrawId = drawId
-            //};
-            //drawModel = await _serviceBus.Request<LotteryDrawModelRequestById, LotteriesDrawModel>(request);
+            var request = new LotteryDrawCollectionRequestLatest()
+            {
+                limit = limit
+            };
+            var collection = await _serviceBus.Request<LotteryDrawCollectionRequestLatest, IDrawCollectionContract>(request);
 
-            //return drawModel;
+            if (collection != null)
+            {
+                // Save the results into our local database
+                foreach (var item in collection.Draws)
+                    _drawStorage.Save((LotteriesDrawModel)item);
+
+                return new LotteriesDrawCollection()
+                {
+                    Draws = collection.Draws.Select(x => (LotteriesDrawModel)x)
+                };
+            }
 
             return null;
         }

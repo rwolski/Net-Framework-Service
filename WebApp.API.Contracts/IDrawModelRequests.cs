@@ -18,7 +18,7 @@ namespace WebApp.API.Contracts
         /// The draw identifier.
         /// </value>
         [JsonProperty("draw_id")]
-        int DrawId { get; }
+        Guid DrawId { get; }
     }
 
     /// <summary>

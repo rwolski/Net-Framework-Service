@@ -52,7 +52,7 @@ namespace WebApp.API.ServiceEvents
             {
                 // Broadcast the recently closed draw result
                 var hub = _webSockets.GetHub();
-                hub.Broadcast("host", JsonConvert.SerializeObject(this));
+                hub.Broadcast("host", JsonConvert.SerializeObject(this.Contract));
             }
         }
     }

@@ -1,11 +1,11 @@
 <li>
 	<table class="view">
 		<tr>
-			<td>{{$ctrl.draw.draw_name}}</td>
-			<td ng-repeat='draw_number in $ctrl.draw.draw_numbers'>{{draw_number}}</td>
+			<td>Draw {{$ctrl.draw.draw_number}}</td>
+			<td ng-repeat='number in $ctrl.draw.draw_winning_numbers'>{{number}}</td>
 		</tr>
 		<tr>
-			<td>{{$ctrl.draw.draw_date}}</td>
+			<td>{{$ctrl.draw.draw_date_time}}</td>
 			<td>{{$ctrl.draw.draw_status}}</td>
 		</tr>
 	</table>

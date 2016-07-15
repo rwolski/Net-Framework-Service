@@ -13,10 +13,12 @@ export default {
 function MainSection(lotteriesService) {
   this.lotteriesService = lotteriesService;
   this.selectedFilter = visibilityFilters[this.filter];
-  
+
   this.closedReducer = function (count, draw) {
     return draw.draw_status === "closed" ? count + 1 : count;
   };
+
+  this.load();
 }
 
 MainSection.prototype = {
@@ -25,10 +27,13 @@ MainSection.prototype = {
     this.filter = filter;
     this.selectedFilter = visibilityFilters[filter];
   },
-  
-  updateDraws: function () {
-    $http.get('localhost/api/powerball').then(function(response) {
-      this.lotteriesService.draws = response.data;
-    });
+
+  load: function() {
+    this.lotteriesService.getDraws().then((function(_this) {
+        return function(response) {
+            if (response && response.data.draws)
+                _this.draws = response.data.draws;
+        };
+    })(this));
   }
 };
