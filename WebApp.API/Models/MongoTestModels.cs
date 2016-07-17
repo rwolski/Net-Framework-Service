@@ -1,23 +1,24 @@
 ﻿using Framework.Data;
 using Framework.Queue;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
-using WebApp.API.Contracts;
+using System.Runtime.Serialization;
 
 namespace WebApp.API.Models
 {
     /// <summary>
-    /// Oz lotto draw model
+    /// Mongo test model
     /// </summary>
-    [PersistedEntity("MongoLottoDraw")]
-    [QueuedEntity("MongoLottoDraw")]
-    public class MongoLottoDrawModel : Entity
+    [PersistedEntity("MongoTestModel")]
+    [QueuedEntity("MongoTestModel")]
+    public class MongoTestModel : Entity
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MongoLottoDrawModel"/> class.
+        /// Initializes a new instance of the <see cref="MongoTestModel"/> class.
         /// </summary>
-        public MongoLottoDrawModel()
+        public MongoTestModel()
         {
         }
 
@@ -32,37 +33,37 @@ namespace WebApp.API.Models
         {
             get
             {
-                return "OzLotto";
+                return "MongoTestModel";
             }
         }
 
         /// <summary>
-        /// The draw winning numbers
+        /// The magic numbers
         /// </summary>
-        [EntityField("draw_winning_numbers")]
-        [JsonProperty("draw_winning_numbers")]
-        public IEnumerable<int> DrawWinningNumbers { get; set; }
+        [EntityField("numbers")]
+        [JsonProperty("numbers")]
+        public IEnumerable<int> Numbers { get; set; }
 
         /// <summary>
-        /// The draw date time
+        /// The date time
         /// </summary>
-        [IndexField("draw_date_time", Sequence = 1)]
-        [JsonProperty("draw_date_time")]
-        public DateTime DrawDateTime { get; set; }
+        [IndexField("date_time", Sequence = 1)]
+        [JsonProperty("date_time")]
+        public DateTime DateTime { get; set; }
 
         /// <summary>
-        /// The draw number
+        /// The number
         /// </summary>
-        [IndexField("draw_number", Sequence = 2)]
-        [JsonProperty("draw_number")]
-        public int DrawNumber { get; set; }
+        [IndexField("number", Sequence = 2)]
+        [JsonProperty("number")]
+        public int Number { get; set; }
 
         /// <summary>
-        /// The draw status
+        /// The status
         /// </summary>
-        [EntityField("draw_status")]
-        [JsonProperty("draw_status")]
-        public DrawStatusCode DrawStatus { get; set; }
+        [EntityField("status")]
+        [JsonProperty("status")]
+        public MongoStatusCode Status { get; set; }
 
         #endregion
 
@@ -80,7 +81,7 @@ namespace WebApp.API.Models
             if (obj == null || GetType() != obj.GetType())
                 return false;
 
-            return Equals((MongoLottoDrawModel)obj);
+            return Equals((MongoTestModel)obj);
         }
 
         /// <summary>
@@ -88,9 +89,9 @@ namespace WebApp.API.Models
         /// </summary>
         /// <param name="other">The other.</param>
         /// <returns></returns>
-        public bool Equals(MongoLottoDrawModel other)
+        public bool Equals(MongoTestModel other)
         {
-            return this.DrawNumber == other.DrawNumber;
+            return this.Number == other.Number;
         }
 
         /// <summary>
@@ -101,9 +102,28 @@ namespace WebApp.API.Models
         /// </returns>
         public override int GetHashCode()
         {
-            return this.DrawNumber.GetHashCode();
+            return this.Number.GetHashCode();
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// Draw status codes
+    /// </summary>
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum MongoStatusCode
+    {
+        /// <summary>
+        /// Draw is closed
+        /// </summary>
+        [EnumMember(Value = "closed")]
+        Closed = 0,
+
+        /// <summary>
+        /// Draw is open
+        /// </summary>
+        [EnumMember(Value = "open")]
+        Open = 1
     }
 }

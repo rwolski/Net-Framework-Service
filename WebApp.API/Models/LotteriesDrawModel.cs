@@ -10,7 +10,7 @@ namespace WebApp.API
     /// Transit draw model based on event
     /// </summary>
     /// <seealso cref="Framework.Data.Entity" />
-    /// <seealso cref="WebApp.API.Contracts.ITransitLottoDrawEvent" />
+    /// <seealso cref="WebApp.API.Contracts.IDrawModelContract" />
     [PersistedEntity("LotteriesDraw")]
     [JsonObject("LotteriesDrawModel")]
     public class LotteriesDrawModel : Entity, IDrawModelContract

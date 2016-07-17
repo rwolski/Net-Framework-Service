@@ -50,7 +50,6 @@
     <Compile Include="IDrawCollectionRequests.cs" />
     <Compile Include="IDrawModelRequests.cs" />
     <Compile Include="IDrawModelContract.cs" />
-    <Compile Include="ITransitLottoEvents.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,5 @@
 ﻿using Framework.Cache;
 using Framework.Data;
-using Framework.Queue;
 using Framework.ServiceBus;
 using System;
 using System.Collections.Generic;
@@ -8,7 +7,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using WebApp.API.Contracts;
-using WebApp.API.Models;
 
 namespace WebApp.API.Controllers
 {

@@ -2,14 +2,12 @@
 using Framework.Queue;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace WebApp.API.Models
 {
     /// <summary>
-    /// Oz lotto draw model
+    /// Account model
     /// </summary>
     [PersistedEntity("AccountMongo")]
     [QueuedEntity("AccountQueue")]
@@ -38,21 +36,21 @@ namespace WebApp.API.Models
         }
 
         /// <summary>
-        /// The draw winning numbers
+        /// Username
         /// </summary>
         [IndexField("username")]
-        [JsonProperty("draw_winning_numbers")]
+        [JsonProperty("username")]
         public string Username { get; set; }
 
         /// <summary>
-        /// The draw date time
+        /// Password
         /// </summary>
         [EntityField("password")]
         [JsonProperty("password")]
         public string Password { get; set; }
 
         /// <summary>
-        /// The draw number
+        /// Gender
         /// </summary>
         [EntityField("gender")]
         [JsonProperty("gender")]
