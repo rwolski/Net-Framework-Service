@@ -1,7 +1,0 @@
-
-Set up visual studio to integrate with gulp to run the api and serve the page upon running
-Set up karma test runner in VS
-Set up API security & global error handling
-
-Test Document stores
-.NET Core
